@@ -1,0 +1,1164 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Návrh a posudek prostě uložené jednosměrně nesené železobetonové desky podle Eurokódu 2, s tiskem protokolu do PDF. Informativní pomocný výpočet.">
+<title>Prostě uložená deska – návrh a posudek</title>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital@0;1&display=swap">
+<style id="css">
+:root{color-scheme:light;
+--bg:#e8ecee;--pn:#f7f8f9;--pn2:#eef2f5;--ink:#1b2328;--mu:#56636b;--ln:#c4ccd1;--ac:#1f5f8b;--on-ac:#ffffff;--ac-f:rgba(31,95,139,.13);
+--ok:#1e7a46;--bad:#b3261e;--ok-f:rgba(30,122,70,.14);--tlak:#2563a8;--tah:#c2531b;--tlak-f:rgba(37,99,168,.15);--tah-f:rgba(194,83,27,.15);--conc:#e1e6e9;--grid:rgba(86,99,107,.2)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+--bg:#14181a;--pn:#1d2326;--pn2:#242b2f;--ink:#e5eaec;--mu:#9ba6ac;--ln:#3a4448;--ac:#6db3e0;--on-ac:#0e1a21;--ac-f:rgba(109,179,224,.16);
+--ok:#5cc98a;--bad:#f28b82;--ok-f:rgba(92,201,138,.18);--tlak:#5596e0;--tah:#d9703a;--tlak-f:rgba(85,150,224,.2);--tah-f:rgba(217,112,58,.2);--conc:#2b3337;--grid:rgba(155,166,172,.18)}}
+:root[data-theme="dark"]{color-scheme:dark;
+--bg:#14181a;--pn:#1d2326;--pn2:#242b2f;--ink:#e5eaec;--mu:#9ba6ac;--ln:#3a4448;--ac:#6db3e0;--on-ac:#0e1a21;--ac-f:rgba(109,179,224,.16);
+--ok:#5cc98a;--bad:#f28b82;--ok-f:rgba(92,201,138,.18);--tlak:#5596e0;--tah:#d9703a;--tlak-f:rgba(85,150,224,.2);--tah-f:rgba(217,112,58,.2);--conc:#2b3337;--grid:rgba(155,166,172,.18)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;padding-inline:16px}
+.page{max-width:1120px;margin-inline:auto;padding-block:26px 48px;display:grid;gap:14px}
+header h1{font-size:clamp(24px,4vw,32px);line-height:1.15;margin:0 0 6px;font-weight:600;text-wrap:balance}
+header p{margin:0;color:var(--mu);max-width:74ch}
+.card{background:var(--pn);border:1px solid var(--ln);border-radius:8px;padding:16px 18px;min-width:0}
+h2{font-size:19px;line-height:1.25;margin:0;text-wrap:balance}
+h3{font-size:15px;margin:0 0 6px}
+.lead{margin:0 0 14px;color:var(--mu);font-size:14px;max-width:78ch}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+label{display:block;font-size:14px;color:var(--mu)}
+input,select{width:100%;font:inherit;font-size:15px;padding:7px 8px;margin-top:3px;border:1px solid var(--ln);border-radius:5px;background:var(--bg);color:var(--ink)}
+input::placeholder{color:var(--mu);opacity:.75}
+input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--bad);box-shadow:0 0 0 1px var(--bad)}
+.btn{font:600 15px "IBM Plex Sans",sans-serif;background:var(--ac);color:var(--on-ac);border:0;border-radius:6px;padding:10px 18px;cursor:pointer}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.mini{font:600 13px "IBM Plex Sans",sans-serif;background:none;border:1px solid var(--ac);color:var(--ac);border-radius:5px;padding:4px 10px;cursor:pointer}
+.row-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td,th{padding:5px 4px;border-top:1px solid var(--ln);vertical-align:top}
+.note{font-size:13px;color:var(--mu);margin:10px 0 0;max-width:80ch}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+.wrap{overflow-x:auto}
+.sum{background:var(--pn2);border-radius:6px;padding:10px 12px;margin-bottom:8px;font-size:16px}
+.f{font:italic 15px/1.6 "IBM Plex Serif",Georgia,serif;background:var(--pn2);padding:5px 10px;border-radius:4px;margin:6px 0;overflow-x:auto;white-space:nowrap}
+.q{display:inline-block;width:16px;height:16px;margin-left:5px;border:1px solid var(--ac);border-radius:50%;color:var(--ac);font:600 11px/14px "IBM Plex Sans",sans-serif;text-align:center;cursor:help;vertical-align:middle}
+#tip{position:fixed;display:none;z-index:9;max-width:300px;background:var(--pn);color:var(--ink);border:1px solid var(--ac);border-radius:6px;padding:10px 12px;font-size:14px;line-height:1.45;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+#figs svg,#tip svg{width:100%;max-width:290px;display:block;color:var(--ink)}
+#figs text,#tip text{fill:currentColor;font-size:9px}
+#figs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 22px}
+@media(max-width:760px){#figs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:460px){#figs{grid-template-columns:minmax(0,1fr)}}
+.fig p{margin:2px 0 0;font-size:13px;color:var(--mu)}
+/* rolety */
+details.fold{margin:0;padding:0}
+details.fold>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:16px minmax(0,1fr) auto;column-gap:10px;row-gap:1px;align-items:baseline;border-radius:6px}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary .chev{grid-row:1;grid-column:1;color:var(--ac);font-size:16px}
+details.fold>summary .chev::before{content:"▸";display:inline-block;transition:transform .15s}
+details.fold[open]>summary .chev::before{transform:rotate(90deg)}
+details.fold>summary h2{grid-row:1;grid-column:2}
+details.fold>summary .sub{grid-row:2;grid-column:2;color:var(--mu);font-size:14px}
+details.fold>summary .fold-meta{grid-row:1/span 2;grid-column:3;align-self:center;text-align:right;max-width:48ch;color:var(--mu);font-size:14px;font-variant-numeric:tabular-nums}
+details.fold>summary .fold-meta b{color:var(--ink);font-weight:600}
+details.fold>summary:hover h2{color:var(--ac)}
+details.fold[open]>summary{margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--ln)}
+@media(max-width:720px){details.fold>summary .fold-meta{grid-row:3;grid-column:2;text-align:left;max-width:none;margin-top:4px}}
+@media (prefers-reduced-motion:reduce){details.fold>summary .chev::before{transition:none}}
+body.stale .fold-meta.resm{opacity:.45}
+.empty{color:var(--mu);font-size:14px;margin:0;padding:10px 12px;background:var(--pn2);border-radius:6px}
+/* zadání */
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(max-width:760px){.form{grid-template-columns:minmax(0,1fr)}}
+.fs{border:1px solid var(--ln);border-radius:6px;padding:8px 14px 14px;margin:0;min-width:0}
+.fs legend{font-weight:600;padding:0 6px;color:var(--ac);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.fs.wide{grid-column:1/-1}
+.g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.g .full{grid-column:1/-1}
+@media(max-width:420px){.g{grid-template-columns:minmax(0,1fr)}}
+.ld{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:760px){.ld{grid-template-columns:minmax(0,1fr)}}
+.act{background:var(--pn2);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.act p{margin:0;font-size:14px;color:var(--mu)}
+.act .btn{align-self:flex-start}
+.status{font-size:14px}
+.chkl{display:flex;align-items:center;gap:8px;color:var(--ink)}.chkl input{width:auto;margin:0}
+#d_layers{width:100%;border-collapse:collapse;margin-top:4px;font-size:13px}
+#d_layers th{font-weight:600;text-align:left;padding:2px 4px;color:var(--mu);border:0}
+#d_layers td{padding:2px 3px;border:0}
+#d_layers input,#d_layers select{padding:4px 5px;font-size:13px;margin:0}
+#d_layers select{min-width:150px}
+#d_layers input.ly_h,#d_layers input.ly_r,#d_layers #slab_g{width:64px}
+#d_layers .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;padding-inline:6px}
+#d_layers tr.slab td{background:var(--pn2)}
+#d_layers tr.slab td:first-child{font-weight:600;color:var(--ink);padding-left:6px}
+#d_layers tr.slab input[readonly]{background:transparent;border-color:transparent;color:var(--ink);font-weight:600}
+#d_layers tfoot td{border-top:2px solid var(--ln);padding-top:6px;font-weight:600;color:var(--ink)}
+#d_gsum{color:var(--ac)}
+.rm{background:none;border:1px solid var(--ln);border-radius:4px;color:var(--bad);cursor:pointer;width:26px;height:26px;line-height:1;font-size:13px}
+.reft td{border-top:1px solid var(--ln);text-align:center;font-size:13px;font-variant-numeric:tabular-nums}
+.reft td:first-child{text-align:left;color:var(--mu);font-weight:600}
+/* výsledky */
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 24px;align-items:start}
+@media(max-width:900px){.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+.sp{margin-top:20px}
+.pn h3,.fh{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin:0 0 6px;font-weight:600}
+.kv{width:100%;border-collapse:collapse;font-size:14px}
+.kv td,.kv th{padding:5px 3px;border-top:1px solid var(--ln);vertical-align:baseline}
+.kv th{font-size:12px;color:var(--mu);font-weight:600;text-align:left;border-top:0}
+.kv td:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.kv tr.em td{color:var(--ac)}
+.kv td.ok,.kv td.bad{white-space:nowrap}
+.lt td:not(:first-child),.lt th:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lt td{font-weight:400!important}
+.lt tr.em td{font-weight:600!important}
+.lt tfoot td{border-top:2px solid var(--ln);font-weight:600!important}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media(max-width:860px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{background:var(--pn2);border-radius:6px;padding:10px 12px;min-width:0}
+.tile .k{font-size:12px;color:var(--mu);text-transform:uppercase;letter-spacing:.05em}
+.tile .v{font-size:20px;font-weight:600;margin-top:2px;font-variant-numeric:tabular-nums;line-height:1.3}
+.tile .s{font-size:13px;color:var(--mu)}
+.verdict{margin:14px 0 10px;font-weight:600;font-size:16px}
+.verdict span{color:var(--mu);font-weight:400;font-size:14px}
+.checks{width:100%;border-collapse:collapse;font-size:14px}
+.checks th{font-size:12px;color:var(--mu);text-align:left;font-weight:600;padding:4px;border-top:0;border-bottom:1px solid var(--ln);text-transform:uppercase;letter-spacing:.04em}
+.checks td{padding:7px 4px;border-top:0;border-bottom:1px solid var(--ln);vertical-align:middle}
+.checks td.cond{font-variant-numeric:tabular-nums}
+.checks td.u{width:28%;min-width:130px}
+.checks td.r{text-align:center;font-weight:600;width:30px}
+@media(max-width:560px){.page .checks thead{display:none}.page .checks tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:8px;padding:8px 0;border-bottom:1px solid var(--ln)}.page .checks td{border:0;padding:2px 0}.page .checks td.cond{grid-column:1/-1;grid-row:2;color:var(--mu)}.page .checks td.u{grid-column:1/-1;grid-row:3;width:auto;min-width:0}.page .checks td.r{grid-row:1;grid-column:2}}
+.ubar{display:flex;align-items:center;gap:8px}
+.ubar i{flex:1;height:8px;background:var(--pn2);border:1px solid var(--ln);border-radius:4px;overflow:hidden;display:block}
+.ubar i b{display:block;height:100%;background:var(--ac)}
+.ubar i b.bad{background:var(--bad)}
+.ubar span{min-width:42px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.st-t{font-size:14px;margin:6px 0 2px;max-width:640px}
+.st-t th{font-size:13px;color:var(--mu);font-weight:600;text-align:right;border-top:0}
+.st-t th:first-child,.st-t td:first-child{text-align:left}
+.st-t td{text-align:right;font-variant-numeric:tabular-nums}
+.st-t tr.sel td{font-weight:600;color:var(--ac)}
+.st-t tfoot td{border-top:2px solid var(--ln);font-weight:600}
+/* diagramy */
+.figwrap{overflow-x:auto}
+.figwrap svg{display:block;width:100%;height:auto}
+.fw-beam svg{min-width:560px}.fw-sec svg{min-width:640px}.fw-st svg{min-width:420px}.fw-geo svg{min-width:640px}.fw-sm svg{min-width:340px}.fw-lay{max-width:700px}.fw-lay svg{min-width:520px}
+.dia text{fill:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:12px}
+.dia .t-mu{fill:var(--mu)}.dia .t-tl{fill:var(--tlak)}.dia .t-th{fill:var(--tah)}.dia .t-ac{fill:var(--ac)}.dia .t-bad{fill:var(--bad)}.dia .t-ok{fill:var(--ok)}
+.dia .t-b{font-weight:600}.dia .t-h{font-weight:600;fill:var(--mu);font-size:11px;letter-spacing:.06em}
+.dia .ln{stroke:var(--ink);stroke-width:1.2;fill:none}
+.dia .ln-mu{stroke:var(--mu);stroke-width:1;fill:none}
+.dia .ln-ok{stroke:var(--ok);stroke-width:1.5;stroke-dasharray:7 4;fill:none}
+.dia .dash{stroke-dasharray:5 4}
+.dia .beam{stroke:var(--ink);stroke-width:3}
+.dia .sup{fill:var(--pn);stroke:var(--ink);stroke-width:1.2}
+.dia .band{fill:var(--ac-f);stroke:var(--ac);stroke-width:1}
+.dia .conc{fill:var(--conc);stroke:var(--ink);stroke-width:1.2}
+.dia .floor{fill:var(--pn2);stroke:var(--mu);stroke-width:1}
+.dia .wall{stroke:var(--ink);stroke-width:1.2}
+.dia .lyr{stroke:var(--ink);stroke-width:1}
+.dia .pl{fill:var(--pn2)}
+.dia .pf-bg{fill:var(--pn2)}.dia .pf-bg2{fill:var(--pn)}.dia .pf-conc{fill:var(--conc)}
+.dia .pf-l{stroke:var(--mu);stroke-width:.9;fill:none}.dia .pf-d{fill:var(--mu)}
+.dia .bar{fill:var(--ink)}
+.dia .bar-r{fill:var(--mu)}
+.dia .rebar{stroke:var(--tah);stroke-width:2.4;fill:none;stroke-linecap:round}
+.dia .rb-main{stroke:var(--tah);fill:none;stroke-linecap:round}
+.dia .rb-dist{stroke:var(--ink);fill:none;stroke-linecap:round;opacity:.75}
+.dia .plan{fill:var(--conc);stroke:var(--mu);stroke-width:1}
+.dia .axis{stroke:var(--ac);stroke-width:1.1;stroke-dasharray:12 3 2 3;fill:none}
+.dia .cut{stroke:var(--tah);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+.dia .f-tl{fill:var(--tlak-f);stroke:var(--tlak);stroke-width:1.6}
+.dia .f-th{fill:var(--tah-f);stroke:var(--tah);stroke-width:1.6}
+.dia .f-ac{fill:var(--ac-f);stroke:var(--ac);stroke-width:1.6}
+.dia .f-ok{fill:var(--ok-f);stroke:var(--ok);stroke-width:1.6}
+.dia .h-tl{stroke:var(--tlak);stroke-width:.8;opacity:.75}.dia .h-th{stroke:var(--tah);stroke-width:.8;opacity:.75}.dia .h-ac{stroke:var(--ac);stroke-width:.8;opacity:.75}
+.dia .a-ink{stroke:var(--ink);stroke-width:1.2}.dia .a-ink-h{fill:var(--ink)}
+.dia .a-tl{stroke:var(--tlak);stroke-width:2.4}.dia .a-tl-h{fill:var(--tlak)}
+.dia .a-th{stroke:var(--tah);stroke-width:2.4}.dia .a-th-h{fill:var(--tah)}
+.dia .a-ac{stroke:var(--ac);stroke-width:1.6}.dia .a-ac-h{fill:var(--ac)}
+.dia .dim{stroke:var(--mu);stroke-width:1}
+.dia .dot{fill:var(--ac);stroke:var(--pn);stroke-width:2}
+.dia .dot-th{fill:var(--tah);stroke:var(--pn);stroke-width:2}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--mu);margin-top:8px}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-2px}
+.lg-tl::before{background:var(--tlak)}.lg-th::before{background:var(--tah)}.lg-ac::before{background:var(--ac)}.lg-ok::before{background:var(--ok)}.lg-ink::before{background:var(--ink)}
+.charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:10px}
+@media(max-width:760px){.charts{grid-template-columns:minmax(0,1fr)}}
+.chartbox{position:relative;height:260px}
+.figs2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;align-items:start}
+@media(max-width:860px){.figs2{grid-template-columns:minmax(0,1fr)}}
+.ctrl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:end;margin-bottom:14px}
+.seg{display:inline-flex;border:1px solid var(--ln);border-radius:6px;overflow:hidden;flex-wrap:wrap}
+.seg button{font:500 14px "IBM Plex Sans",sans-serif;background:var(--pn);color:var(--ink);border:0;border-right:1px solid var(--ln);padding:7px 12px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ac);color:var(--on-ac)}
+.ctrl label{min-width:220px}
+/* podrobný výpočet */
+.st-h{display:flex;align-items:center;gap:10px;font-size:16px;margin:24px 0 4px;padding-bottom:6px;border-bottom:1px solid var(--ln)}
+.st-n{display:inline-grid;place-items:center;min-width:26px;height:26px;border-radius:50%;background:var(--ac);color:var(--on-ac);font-size:13px;font-weight:600}
+.st-row{display:grid;grid-template-columns:190px minmax(0,1fr) 230px;gap:2px 18px;padding:7px 0;border-bottom:1px dashed var(--ln);align-items:baseline}
+.st-d{color:var(--mu);font-size:14px}
+.st-e{font:italic 15px/1.6 "IBM Plex Serif",Georgia,serif;overflow-x:auto;min-width:0}
+.st-r{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.st-note{font-size:13px;color:var(--mu);margin:8px 0 0;max-width:80ch}
+.st-end{margin-top:18px}
+@media(max-width:700px){.page .st-row{grid-template-columns:minmax(0,1fr)}.page .st-r{text-align:left}}
+/* tisk */
+.printbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+.printbar .txt{flex:1 1 320px;min-width:0}
+.printbar .txt p{margin:2px 0 0;color:var(--mu);font-size:14px}
+.printbar .chkl{font-size:14px}
+/* patička s upozorněním */
+.disc{font-size:12px;line-height:1.5;color:var(--mu);margin:0;max-width:110ch}
+/* protokol pro PDF (vykresluje se mimo obrazovku, vždy ve světlých barvách, hutná sazba) */
+#rep{position:absolute;left:-20000px;top:0}
+.rep{--bg:#ffffff;--pn:#ffffff;--pn2:#eef2f5;--ink:#1b2328;--mu:#56636b;--ln:#c4ccd1;--ac:#1f5f8b;--on-ac:#ffffff;--ac-f:rgba(31,95,139,.13);--ok:#1e7a46;--bad:#b3261e;--ok-f:rgba(30,122,70,.14);--tlak:#2563a8;--tah:#c2531b;--tlak-f:rgba(37,99,168,.15);--tah-f:rgba(194,83,27,.15);--conc:#e1e6e9;--grid:rgba(86,99,107,.2);
+color-scheme:light;width:704px;background:#ffffff;color:#1b2328;font:11px/1.35 Arial,"Helvetica Neue",Helvetica,"Liberation Sans",sans-serif}
+.rep .rb{padding:0 0 7px}
+.rep .rb-h{padding:3px 0 5px}
+.rep .rp-h{font-size:12.5px;margin:0;padding-bottom:2px;border-bottom:1.5px solid var(--ac);color:var(--ac);font-weight:700}
+.rep .rp-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding-bottom:4px;border-bottom:1px solid var(--ln)}
+.rep .rp-t{font-size:16px;font-weight:700;line-height:1.2}
+.rep .rp-s{color:var(--mu);font-size:9.5px;margin-top:1px}
+.rep .rp-d{color:var(--mu);font-size:9.5px;white-space:nowrap}
+.rep .rp-sum{margin-top:5px;padding:4px 8px;border-radius:4px;background:var(--pn2);font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
+.rep .q{display:none}
+.rep .figwrap svg{min-width:0}
+.rep .dia text{font-family:Arial,"Helvetica Neue",Helvetica,"Liberation Sans",sans-serif}
+.rep h3{font-size:9px;margin:0 0 1px;letter-spacing:.05em}
+.rep .kv{font-size:10.2px}.rep .kv td,.rep .kv th{padding:1.4px 2px;line-height:1.3}.rep .kv th{font-size:8.8px}
+.rep .checks{font-size:10.2px}.rep .checks td{padding:1.8px 3px}.rep .checks th{padding:1px 3px;font-size:8.6px}.rep .checks td.u{min-width:0;width:24%}
+.rep .ubar i{height:6px}.rep .ubar span{min-width:34px}
+.rep .grid3{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 14px}
+.rep .grid2,.rep .figs2{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 14px}
+.rep .sum{font-size:11px;margin:0;padding:5px 8px}
+.rep .disc{font-size:8.4px;line-height:1.35;color:var(--mu);border-top:1px solid var(--ln);padding-top:3px;max-width:none}
+.rep .st-e{font-family:Georgia,"Times New Roman","Liberation Serif",serif;overflow:visible;font-size:10.5px;line-height:1.35}
+.rep .st-row{grid-template-columns:125px minmax(0,1fr) 125px;gap:1px 8px;padding:1.5px 0}
+.rep .st-d{font-size:9.5px}.rep .st-r{font-size:10.5px}
+.rep .st-h{margin:4px 0 1px;font-size:11.5px;padding-bottom:2px;gap:6px}.rep .st-n{min-width:17px;height:17px;font-size:9.5px}
+.rep .st-note{font-size:9px;margin:2px 0 0}.rep .st-t{font-size:10px;margin:2px 0}.rep .st-t th{font-size:9px}.rep .st-t td,.rep .st-t th{padding:1px 3px}.rep .st-end{margin-top:4px}
+</style>
+</head>
+<body>
+
+
+<div class="page">
+<header><h1>Prostě uložená deska – návrh a posudek</h1>
+<p>Jednosměrně nesená železobetonová deska, výpočet podle EN 1990 a EN 1992-1-1 (Eurokód 2, 2. generace). Vyplňte zadání a klikněte na <b>Navrhnout a posoudit</b>: program navrhne tloušťku a výztuž, posoudí je podle EC2 a výsledky zakreslí do schémat. Najetím na <span class="q" style="margin:0">?</span> se zobrazí vysvětlení pojmu.</p>
+<div class="row-btns"><button type="button" class="mini" id="openAll">Rozbalit vše</button><button type="button" class="mini" id="closeAll">Sbalit vše</button></div></header>
+
+<section class="card" id="inputs"><details class="fold" id="f_in"><summary><span class="chev" aria-hidden="true"></span><h2>Zadání</h2><span class="sub">Geometrie, skladba stropu, užitné zatížení, materiály a výztuž</span><span class="fold-meta" id="meta_in"></span></summary>
+<div class="form">
+<fieldset class="fs"><legend>Geometrie</legend><div class="g">
+<label>Světlé rozpětí l<sub>n</sub> <i data-q="ln"></i> (m)<input id="d_ln" type="number" inputmode="decimal" step="0.05" min="0" placeholder="např. 3,45" autocomplete="off"></label>
+<label>Tloušťka desky h <i data-q="h"></i> (mm)<input id="d_h" type="number" inputmode="numeric" step="10" min="60" placeholder="navrhne se" autocomplete="off"></label>
+<label>Uložení t<sub>1</sub> <i data-q="t"></i> (mm)<input id="d_t1" type="number" inputmode="numeric" min="0" placeholder="např. 490" autocomplete="off"></label>
+<label>Uložení t<sub>2</sub> (mm)<input id="d_t2" type="number" inputmode="numeric" min="0" placeholder="např. 470" autocomplete="off"></label>
+<label class="full">Účinné rozpětí l<sub>eff</sub> <i data-q="leff"></i><select id="d_lm"><option value="axis">osová vzdálenost podpor (a = t/2)</option><option value="ec2">zkrácené podle EC2 (a = min(h/2; t/2))</option></select></label>
+</div></fieldset>
+<fieldset class="fs"><legend>Materiály</legend><div class="g">
+<label class="full">Beton <i data-q="fck"></i><select id="d_fck"><option value="">— vyberte třídu betonu —</option></select></label>
+<label>Výztuž f<sub>yk</sub> <i data-q="fyk"></i> (MPa)<input id="d_fyk" type="number" inputmode="numeric" placeholder="500" autocomplete="off"></label>
+<label>k<sub>tc</sub> <i data-q="ktc"></i><input id="d_ktc" type="number" inputmode="decimal" step="0.05" placeholder="1,0" autocomplete="off"></label>
+<label>D<sub>upper</sub> kameniva <i data-q="D"></i> (mm)<input id="d_du" type="number" inputmode="numeric" placeholder="16" autocomplete="off"></label>
+<label>D<sub>lower</sub> kameniva (mm)<input id="d_dl" type="number" inputmode="numeric" placeholder="8" autocomplete="off"></label>
+</div><p class="note">Nevyplněná pole převezmou obvyklou hodnotu, která je v nich napsaná šedě.</p></fieldset>
+<fieldset class="fs wide"><legend>Zatížení</legend><div class="ld">
+<div><label for="d_lb" style="margin-bottom:2px">Stálé zatížení <i data-q="gk"></i> – skladba stropu shora dolů na 1 m² (b = 1 m). Po výběru materiálu se doplní objemová tíha z tabulky, lze ji přepsat. Tloušťka ŽB desky se převezme z návrhu.</label>
+<div class="wrap"><table id="d_layers"><thead><tr><th>Vrstva</th><th>h (mm)</th><th>γ (kN/m³)</th><th class="num">g (kN/m²)</th><th></th></tr></thead><tbody id="d_lb"></tbody>
+<tfoot><tr><td colspan="3">Stálé zatížení g<sub>k</sub> = Σ h·γ</td><td class="num" id="d_gsum"></td><td></td></tr></tfoot></table></div>
+<div class="row-btns" style="margin-top:8px"><button type="button" class="mini" id="addAbove">+ vrstva nad deskou</button><button type="button" class="mini" id="addBelow">+ vrstva pod deskou</button></div></div>
+<div class="g" style="grid-template-columns:1fr"><label>Užitné zatížení q<sub>k</sub> <i data-q="qk"></i> (kN/m²)<input id="d_q" type="number" inputmode="decimal" step="0.5" min="0" placeholder="např. 5,0" autocomplete="off"></label>
+<p class="note" style="margin:0">Hodnota podle kategorie užívání (ČSN EN 1991-1-1), např. obchodní prostory kat. D2: 5,0 kN/m².</p></div>
+</div></fieldset>
+<fieldset class="fs"><legend>Výztuž a krytí</legend><div class="g">
+<label>c<sub>min,dur</sub> <i data-q="cd"></i> (mm)<input id="d_cd" type="number" inputmode="numeric" placeholder="10" autocomplete="off"></label>
+<label>Hlavní výztuž Ø <i data-q="pick"></i><select id="d_p"><option value="0">navrhnout automaticky</option><option>6</option><option>8</option><option>10</option><option>12</option><option>14</option><option>16</option><option>18</option><option>20</option><option>22</option><option>25</option></select></label>
+<label class="full chkl"><input type="checkbox" id="d_rz"> Navrhnout i rozdělovací výztuž <i data-q="Asr"></i></label>
+<label id="d_prwrap" hidden>Rozdělovací výztuž Ø<select id="d_pr"><option>6</option><option>8</option><option>10</option><option>12</option><option>14</option><option>16</option></select></label>
+</div></fieldset>
+<div class="act"><p>Po vyplnění zadání spusťte výpočet. Výsledky se objeví ve svinutých oknech níže, souhrn se rozbalí sám.</p>
+<button class="btn" id="run" type="button">Navrhnout a posoudit</button>
+<p class="status bad" id="valMsg" role="alert" hidden></p><p class="status" id="staleMsg" hidden>Zadání se od posledního výpočtu změnilo. Výsledky níže platí pro předchozí zadání, klikněte znovu na Navrhnout a posoudit.</p></div>
+</div></details></section>
+
+<section class="card"><details class="fold" id="f_res"><summary><span class="chev" aria-hidden="true"></span><h2>Výsledek návrhu</h2><span class="sub">Navržená deska a výztuž, přehled všech posudků a jejich využití</span><span class="fold-meta resm" id="meta_res"></span></summary>
+<p class="empty">Výsledky se zobrazí po vyplnění zadání a kliknutí na Navrhnout a posoudit.</p><div class="rbody" id="ov" hidden></div></details></section>
+
+<section class="card"><details class="fold" id="f_geo"><summary><span class="chev" aria-hidden="true"></span><h2>Geometrie a zatížení</h2><span class="sub">Podélný řez s kótami, skladba stropu a výpočet zatížení</span><span class="fold-meta resm" id="meta_geo"></span></summary>
+<p class="empty">Výsledky se zobrazí po vyplnění zadání a kliknutí na Navrhnout a posoudit.</p><div class="rbody" hidden>
+<h3 class="fh">Podélný řez deskou</h3><div class="figwrap fw-geo" id="geoFig"></div>
+<div class="legend"><span class="lg-ac">osa uložení (teoretická podpora)</span><span class="lg-th">výztuž (dolní hlavní, horní u podpor), řez pro smyk</span></div>
+<div class="grid2 sp"><div class="pn" id="geoKV"></div><div class="pn" id="loadKV"></div></div>
+<h3 class="fh sp">Skladba stropu a stálé zatížení</h3><div class="figwrap fw-lay" id="layFig"></div>
+</div></details></section>
+
+<section class="card"><details class="fold" id="f_vs"><summary><span class="chev" aria-hidden="true"></span><h2>Vnitřní síly</h2><span class="sub">Statické schéma, průběhy M(x) a V(x) porovnané s únosností</span><span class="fold-meta resm" id="meta_vs"></span></summary>
+<p class="empty">Výsledky se zobrazí po vyplnění zadání a kliknutí na Navrhnout a posoudit.</p><div class="rbody" hidden>
+<p class="lead">Náhradní prostý nosník šířky 1 m s rovnoměrným návrhovým zatížením f<sub>d</sub>. Moment je vynesen na straně tažených vláken (dole). Zelené čárkované čáry ukazují únosnost průřezu.</p>
+<div class="figwrap fw-beam" id="beamFig"></div>
+<div class="charts"><div class="chartbox"><canvas id="mCanvas" aria-label="Průběh ohybového momentu M(x)" role="img"></canvas></div><div class="chartbox"><canvas id="vCanvas" aria-label="Průběh posouvající síly V(x)" role="img"></canvas></div></div>
+<div class="legend"><span class="lg-ac">průběh od zatížení f<sub>d</sub></span><span class="lg-ok">únosnost M<sub>Rd</sub>, V<sub>Rd</sub></span><span class="lg-ink">moment na mezi vzniku trhlin M<sub>cr</sub></span></div>
+<p class="note" id="chartMsg"></p>
+<div class="grid2 sp"><div class="pn" id="forceKV"></div><div class="pn" id="resistKV"></div></div>
+</div></details></section>
+
+<section class="card"><details class="fold" id="f_rb"><summary><span class="chev" aria-hidden="true"></span><h2>Výztuž</h2><span class="sub">Příčný řez a půdorys výztuže, krytí, účinná výška a rozteče</span><span class="fold-meta resm" id="meta_rb"></span></summary>
+<p class="empty">Výsledky se zobrazí po vyplnění zadání a kliknutí na Navrhnout a posoudit.</p><div class="rbody" hidden>
+<div class="figs2"><div class="figwrap fw-sm" id="rbxFig"></div><div class="figwrap fw-sm" id="planFig"></div></div>
+<div class="legend"><span class="lg-th">hlavní (nosná) výztuž</span><span class="lg-ink">rozdělovací výztuž</span></div>
+<div class="grid2 sp"><div class="pn" id="rbKV"></div><div class="pn" id="candTab"></div></div>
+</div></details></section>
+
+<section class="card"><details class="fold" id="f_sec"><summary><span class="chev" aria-hidden="true"></span><h2>Posudek na ohyb</h2><span class="sub">Řez uprostřed rozpětí: přetvoření, tlačená oblast, síly F<sub>c</sub> a F<sub>s</sub></span><span class="fold-meta resm" id="meta_sec"></span></summary>
+<p class="empty">Výsledky se zobrazí po vyplnění zadání a kliknutí na Navrhnout a posoudit.</p><div class="rbody" hidden>
+<p class="lead">Mezní stav únosnosti: beton v tlačené oblasti dosahuje ε<sub>cu</sub> = 3,5 ‰, výztuž je na mezi kluzu. Tlaková síla v betonu F<sub>c</sub> a tahová síla ve výztuži F<sub>s</sub> jsou v rovnováze a na rameni z<sub>c</sub> vytvářejí moment únosnosti M<sub>Rd</sub>.</p>
+<div class="figwrap fw-sec" id="secFig"></div>
+<div class="legend"><span class="lg-tl">tlak (−)</span><span class="lg-th">tah (+)</span></div>
+<p class="note">Výška řezu je pro čitelnost zvětšena, šířka 1 m zkrácena. Síly jsou na 1 m šířky desky.</p>
+<div class="grid2 sp"><div class="pn" id="bendKV"></div><div class="pn" id="matKV"></div></div>
+</div></details></section>
+
+<section class="card"><details class="fold" id="f_sh"><summary><span class="chev" aria-hidden="true"></span><h2>Posudek na smyk</h2><span class="sub">Kritický řez ve vzdálenosti d od líce podpory, deska bez smykové výztuže</span><span class="fold-meta resm" id="meta_sh"></span></summary>
+<p class="empty">Výsledky se zobrazí po vyplnění zadání a kliknutí na Navrhnout a posoudit.</p><div class="rbody" hidden>
+<div class="figwrap fw-geo" id="shFig"></div>
+<div class="grid2 sp"><div class="pn" id="shKV"></div><div><p class="note" style="margin:0">Zatížení působící mezi podporou a řezem ve vzdálenosti d od líce se přenáší přímo do podpory, proto se smyk posuzuje až na síle V<sub>Ed1</sub>. Stupeň vyztužení ρ<sub>l</sub> se počítá z výztuže zavedené do podpory A<sub>sl</sub> (obvykle každý druhý prut).</p></div></div>
+</div></details></section>
+
+<section class="card"><details class="fold" id="f_st"><summary><span class="chev" aria-hidden="true"></span><h2>Napětí v průřezu</h2><span class="sub">Normálové napětí σ<sub>x</sub> a smykové napětí τ ve stavu I, II a v MSÚ</span><span class="fold-meta resm" id="meta_st"></span></summary>
+<p class="empty">Výsledky se zobrazí po vyplnění zadání a kliknutí na Navrhnout a posoudit.</p><div class="rbody" hidden>
+<p class="lead">Normálové napětí σ<sub>x</sub> od ohybového momentu uprostřed rozpětí a smykové napětí τ od posouvající síly u podpory. Tlak je záporný a vynáší se doprava, tah kladný doleva.</p>
+<div class="ctrl">
+<div><div class="note" style="margin:0 0 4px">Stav průřezu <span class="q" tabindex="0" data-k="stav">?</span></div>
+<div class="seg" role="group" aria-label="Stav průřezu"><button type="button" data-mode="I" aria-pressed="true">Stav I – bez trhlin</button><button type="button" data-mode="II" aria-pressed="false">Stav II – s trhlinou</button><button type="button" data-mode="U" aria-pressed="false">MSÚ – návrhový blok</button></div></div>
+<label>Zatížení pro stav I a II<select id="st_load"><option value="d">návrhové (M<sub>Ed</sub>, V<sub>Ed</sub>)</option><option value="k">charakteristické g<sub>k</sub> + q<sub>k</sub></option></select></label></div>
+<div class="figs2"><div><h3 class="fh">Normálové napětí σ<sub>x</sub></h3><div class="figwrap fw-st" id="sigFig"></div></div><div><h3 class="fh">Smykové napětí τ</h3><div class="figwrap fw-st" id="tauFig"></div></div></div>
+<div class="grid2 sp"><div class="pn"><table class="kv" id="stVals"></table></div><p class="note" id="stNote" style="margin:0"></p></div>
+</div></details></section>
+
+<section class="card"><details class="fold" id="f_steps"><summary><span class="chev" aria-hidden="true"></span><h2>Podrobný výpočet po krocích</h2><span class="sub">Vzorce s dosazenými čísly, krok za krokem</span><span class="fold-meta resm" id="meta_steps"></span></summary>
+<p class="empty">Výsledky se zobrazí po vyplnění zadání a kliknutí na Navrhnout a posoudit.</p><div class="rbody" hidden><div id="steps"></div></div></details></section>
+
+<section class="card"><details class="fold" id="f_ref"><summary><span class="chev" aria-hidden="true"></span><h2>Podklady</h2><span class="sub">Hlavní vzorce, tabulky a schémata pojmů</span><span class="fold-meta"></span></summary>
+<div class="grid2">
+<div><h3 class="fh">Hlavní vzorce</h3>
+<div class="f">h ≥ l<sub>n</sub>/25;  l<sub>eff</sub> = l<sub>n</sub> + a<sub>1</sub> + a<sub>2</sub>;  f<sub>d</sub> = 1,35g<sub>k</sub> + 1,5q<sub>k</sub></div>
+<div class="f">M<sub>Ed</sub> = f<sub>d</sub>l<sub>eff</sub>²/8 v x = l<sub>eff</sub>/2;  V<sub>Ed</sub> = f<sub>d</sub>l<sub>eff</sub>/2</div>
+<div class="f">A<sub>s,req</sub> = b·d·(f<sub>cd</sub>/f<sub>yd</sub>)(1 − √(1 − 2M<sub>Ed</sub>/(b·d²·f<sub>cd</sub>)))</div>
+<div class="f">0,8·x<sub>u</sub>·b·f<sub>cd</sub> = A<sub>s</sub>f<sub>yd</sub>;  z<sub>c</sub> = d − 0,4x<sub>u</sub>;  M<sub>Rd</sub> = A<sub>s</sub>f<sub>yd</sub>z<sub>c</sub></div>
+<div class="f">τ<sub>Ed</sub> = V<sub>Ed1</sub>/(0,9·d·b);  τ<sub>Rdc,min</sub> = (11/1,4)·√(f<sub>ck</sub>/f<sub>yd</sub>·d<sub>dg</sub>/d)</div>
+<div class="f">Stav I: α<sub>e</sub> = E<sub>s</sub>/E<sub>cm</sub>;  σ = M·(z − x)/I<sub>i</sub>;  τ = V·S/(I<sub>i</sub>·b)</div>
+<div class="f">Stav II: b·x²/2 = α<sub>e</sub>A<sub>s</sub>(d − x);  τ = V/(b·z), z = d − x/3</div></div>
+<div><h3 class="fh">Tabulky</h3>
+<p class="note" style="margin-top:0">Plocha profilu A (mm²), A = π·Ø²/4:</p>
+<div class="wrap"><table class="reft"><tr><td>Ø</td><td>6</td><td>8</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td><td>22</td><td>25</td></tr>
+<tr><td>A</td><td>28</td><td>50</td><td>79</td><td>113</td><td>154</td><td>201</td><td>254</td><td>314</td><td>380</td><td>491</td></tr></table></div>
+<p class="note">Beton (EN 1992-1-1): f<sub>ctm</sub> (MPa) a E<sub>cm</sub> = 9500·(f<sub>ck</sub>+8)<sup>1/3</sup> (GPa):</p>
+<div class="wrap"><table class="reft" id="concTab"></table></div>
+<p class="note">Objemové tíhy γ (kN/m³) podle ČSN EN 1991-1-1:</p>
+<div class="wrap"><table class="reft"><tr><td>Materiál</td><td>Kamenná dlažba</td><td>Keramická dlažba</td><td>Mazanina</td><td>Lepidlo, omítka cem.</td><td>Omítka VC</td><td>Min. vlna</td><td>Polystyren</td><td>ŽB</td><td>Prostý beton</td><td>Cihly</td></tr>
+<tr><td>γ</td><td>26</td><td>23</td><td>23</td><td>21</td><td>20</td><td>1,5</td><td>0,3</td><td>25</td><td>24</td><td>18</td></tr></table></div></div>
+</div>
+<h3 class="fh sp">Schémata pojmů</h3><div id="figs" class="fig"></div>
+</details></section>
+
+<section class="card printbar"><div class="txt"><h2>Tisk protokolu</h2><p id="printInfo">Vytvoří PDF se zadáním, výsledky, nákresy a průběhy vnitřních sil. Nejdřív spusťte výpočet.</p></div>
+<label class="chkl"><input type="checkbox" id="pr_steps"> přiložit podrobný výpočet po krocích</label>
+<button class="btn" id="printBtn" type="button" disabled>Tisknout do PDF</button>
+<p class="status" id="printMsg" role="status" style="flex-basis:100%;margin:0" hidden></p></section>
+<footer><p class="disc" id="disc"></p></footer>
+</div>
+<div id="tip" role="tooltip"></div>
+<div id="rep" class="rep" aria-hidden="true"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script id="core">
+/* Výpočetní jádro – bez DOM. Jednotky: délky mm (h, d, c) nebo m (l_n, t, l_eff), síly kN, momenty kNm, napětí MPa. */
+const SD=(function(){
+const FCT={12:1.6,16:1.9,20:2.2,25:2.6,30:2.9,35:3.2,40:3.5,45:3.8,50:4.1};
+const CL={12:15,16:20,20:25,25:30,30:37,35:45,40:50,45:55,50:60};
+const ES=200000,ECU=3.5,B=1000;
+const area=f=>Math.PI*f*f/4;
+const Ecm=fck=>9500*Math.cbrt(fck+8);
+const s25=v=>Math.floor(v/25)*25;
+function loads(P,h){const hm=h/1e3;
+ const a1=P.lm==="ec2"?Math.min(hm/2,P.t1/2):P.t1/2, a2=P.lm==="ec2"?Math.min(hm/2,P.t2/2):P.t2/2;
+ const le=P.ln+a1+a2, gself=(P.gs>0?P.gs:25)*hm, gk=P.gl+gself, fd=1.35*gk+1.5*P.qk, fk=gk+P.qk;
+ return {a1,a2,le,gself,gk,fd,fk,M:fd*le*le/8,V:fd*le/2,Mk:fk*le*le/8,Vk:fk*le/2};}
+function bar(P,h,M,fcd,fyd,fctm,ph){
+ const c=Math.max(P.cd,ph,10)+10, d=h-c-ph/2;
+ if(!(d>0))return{ph,c,d,bad:true};
+ const arg=1-2*M*1e6/(B*d*d*fcd); if(arg<=0)return{ph,c,d,bad:true};
+ const Ar=B*d*fcd/fyd*(1-Math.sqrt(arg));
+ const Mcr=fctm*B*h*h/6e6, argm=1-2*Mcr*1e6/(B*d*d*P.fck);
+ const Am=argm>0?B*d*P.fck/P.fyk*(1-Math.sqrt(argm)):Infinity;
+ const need=Math.max(Ar,Am), smax=Math.min(3*h,400), Af=area(ph);
+ let s=s25(B*Af/need); s=Math.max(Math.min(s,smax),25);
+ return {ph,c,d,Ar,Am,Mcr,Af,s,As:B*Af/s};}
+function pickBar(P,h,M,fcd,fyd,fctm){
+ if(P.ph>0)return bar(P,h,M,fcd,fyd,fctm,P.ph);
+ let best=null;const cands=[];
+ for(const f of[8,10,12,14,16]){const o=bar(P,h,M,fcd,fyd,fctm,f); if(o.bad)return o; cands.push(o); if(o.s<100)continue; if(!best||o.As<best.As-1e-6)best=o;}
+ const r=best||bar(P,h,M,fcd,fyd,fctm,16); r.cands=cands; return r;}
+/* horní konstrukční výztuž u podpor: A ≥ max(0,25·A_s; A_s,min), rozteč ≤ s_max, nejmenší plocha */
+function topBar(need,smax){let best=null;
+ for(const f of[6,8,10,12]){const Af=area(f);let s=Math.min(s25(B*Af/need),s25(smax));if(s<100)continue;const A=B*Af/s;if(!best||A<best.A-1e-6)best={ph:f,s,A}}
+ if(!best){const Af=area(12),s=100;best={ph:12,s,A:B*Af/s}}return best}
+function one(P,h){
+ const L=loads(P,h), fck=P.fck, eta=Math.min(Math.cbrt(40/fck),1), fcd=eta*P.ktc*fck/1.5, fyd=P.fyk/1.15, eyd=fyd/ES*1000, fctm=FCT[fck]||0.3*Math.pow(fck,2/3);
+ const R=Object.assign({h,eta,fcd,fyd,eyd,fctm,Ecm:Ecm(fck),ok:false,checks:{}},L);
+ const o=pickBar(P,h,L.M,fcd,fyd,fctm); R.o=o; if(!o||o.bad)return R;
+ const {d,As,s,ph}=o;
+ const xu=As*fyd/(0.8*B*fcd), es=ECU*(d-xu)/xu, zc=d-0.4*xu, MRd=As*fyd*zc/1e6;
+ const smax=Math.min(3*h,400), su=s-ph, sum=Math.max(ph,P.Du+5,20);
+ let sr=null,Asrp=0; const Asr=0.2*As;
+ if(P.rz){const Afr=area(P.pr); sr=Math.max(Math.min(s25(B*Afr/Asr),s25(smax)),50); Asrp=B*Afr/sr;}
+ /* dolní výztuž zavedená do podpory: každý druhý prut, pokud vyhoví A_s/2 ≥ max(0,25·A_s; A_s,min) a 2s ≤ s_max */
+ const supNeed=Math.max(0.25*As,o.Am), half=As/2>=supNeed-1e-9&&2*s<=smax, Asl=half?As/2:As, ssup=half?2*s:s;
+ const top=topBar(supNeed,smax), ltop=0.2*P.ln;
+ const VE1=L.V-L.fd*(d/1e3+L.a1), tE=VE1*1e3/(0.9*d*B), ddg=Math.min(16+P.Dl,40);
+ const tmin=11/1.4*Math.sqrt(fck/fyd*ddg/d), rho=Asl/(B*d), tRc=0.66/1.4*Math.cbrt(100*rho*fck*ddg/d), tR=Math.max(tRc,tmin);
+ const ch={es:es>eyd,MRd:MRd>=L.M-1e-9,Mcr:o.Mcr<=MRd,Asmin:As>=o.Am-1e-9,su:su>=sum,smax:s<=smax,sr:!P.rz||sr<=smax,Asr:!P.rz||Asrp>=Asr-1e-9,sup:Asl>=supNeed-1e-9&&ssup<=smax,top:top.A>=supNeed-1e-9&&top.s<=smax,shear:tE<=tR};
+ return Object.assign(R,{xu,es,zc,MRd,Fs:As*fyd/1e3,Fc:0.8*xu*B*fcd/1e3,smax,su,sum,Asr,sr,Asrp,supNeed,half,Asl,ssup,top,ltop,VE1,tE,ddg,tmin,rho,tRc,tR,VRd:tR*0.9*d*B/1e3,checks:ch,ok:Object.values(ch).every(Boolean)});}
+function compute(Pin){
+ const P=Object.assign({},Pin);
+ if(P.gl==null)P.gl=(P.layers||[]).reduce((a,l)=>a+l[1]/1000*l[2],0);
+ const lo=Math.max(60,Math.ceil(P.ln*1000/25/10-1e-9)*10), hi=Math.ceil(P.ln*1000/20/10-1e-9)*10;
+ let R;
+ if(P.h>0)R=one(P,P.h); else for(let h=lo;h<=600;h+=10){R=one(P,h); if(R.ok)break;}
+ return Object.assign(R,{lo,hi,auto:!(P.h>0),P});}
+/* pružnostní stavy průřezu: y měřeno od horního líce (mm) */
+function stages(R,level){
+ const M=(level==="k"?R.Mk:R.M)*1e6, V=(level==="k"?R.Vk:R.V)*1e3;
+ const h=R.h,d=R.o.d,As=R.o.As,ae=ES/R.Ecm;
+ const Ai=B*h+(ae-1)*As, xI=(B*h*h/2+(ae-1)*As*d)/Ai;
+ const II=B*h**3/12+B*h*(h/2-xI)**2+(ae-1)*As*(d-xI)**2;
+ const S1=y=>y<=xI?B*y*(xI-y/2):B*(h-y)*((h+y)/2-xI)+(y<d?(ae-1)*As*(d-xI):0);
+ const st1={x:xI,I:II,top:-M*xI/II,bot:M*(h-xI)/II,atD:M*(d-xI)/II,ss:ae*M*(d-xI)/II,sig:y=>M*(y-xI)/II,tau:y=>V*S1(y)/(II*B),tmax:V*S1(xI)/(II*B)};
+ const aA=ae*As, x2=(-aA+Math.sqrt(aA*aA+2*B*aA*d))/B, I2=B*x2**3/3+aA*(d-x2)**2, z2=d-x2/3;
+ const st2={x:x2,I:I2,z:z2,top:-M*x2/I2,ss:ae*M*(d-x2)/I2,sig:y=>y<=x2?M*(y-x2)/I2:0,tau:y=>y<=x2?V*y*(x2-y/2)/I2:(y<=d?V/(B*z2):0),tmax:V/(B*z2)};
+ return {ae,M:M/1e6,V:V/1e3,I:st1,II:st2};}
+return {compute,stages,FCT,CL,Ecm,area};
+})();
+</script>
+<script>
+const $=id=>document.getElementById(id);
+const F=(x,d=2)=>isFinite(x)?x.toFixed(d).replace(".",",").replace("-","−"):"–";
+const Fn=x=>F(x,Math.abs(x-Math.round(x))<1e-9?0:1);
+const Fi=x=>Math.round(x).toLocaleString("cs-CZ").replace(/\s/g," ");
+const r1=v=>Math.round(v*10)/10;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const val=id=>{const s=String($(id).value).trim().replace(",",".");if(s==="")return NaN;const v=parseFloat(s);return isFinite(v)?v:NaN};
+const NV=(id,def)=>{const v=val(id);return isFinite(v)?v:def};
+const clsName=f=>`C${f}/${SD.CL[f]||"–"}`;
+const okSec=R=>!!(R&&R.o&&!R.o.bad);
+/* text s dolními indexy pro SVG: "M_{Ed}" */
+function st(t){const p=String(t).split(/_\{([^}]*)\}/);let o=esc(p[0]);for(let i=1;i<p.length;i+=2)o+=`<tspan dy="3" font-size="75%">${esc(p[i])}</tspan><tspan dy="-3">${esc(p[i+1]||"")||"​"}</tspan>`;return o}
+const tw=t=>String(t).replace(/_\{([^}]*)\}/g,"$1").length*6.3;
+function T(x,y,txt,cls="",anchor="start"){return `<text x="${r1(x)}" y="${r1(y)}" text-anchor="${anchor}" class="${cls}">${st(txt)}</text>`}
+function line(x1,y1,x2,y2,cls){return `<line x1="${r1(x1)}" y1="${r1(y1)}" x2="${r1(x2)}" y2="${r1(y2)}" class="${cls}"/>`}
+function poly(pts,cls){return `<polygon points="${pts.map(p=>r1(p[0])+","+r1(p[1])).join(" ")}" class="${cls}"/>`}
+function arrow(x1,y1,x2,y2,cls,hs=8){const a=Math.atan2(y2-y1,x2-x1),w=hs*.45,bx=x2-hs*Math.cos(a),by=y2-hs*Math.sin(a),px=-Math.sin(a)*w,py=Math.cos(a)*w;
+ return line(x1,y1,bx,by,cls)+`<path d="M${r1(x2)} ${r1(y2)}L${r1(bx+px)} ${r1(by+py)}L${r1(bx-px)} ${r1(by-py)}Z" class="${cls}-h"/>`}
+function tick(x,y){return line(x-4,y+4,x+4,y-4,"ln")}
+/* kóta vodorovná: ext = [přesah nahoru, přesah dolů]; úzký úsek → popis vně */
+function dimH(x1,x2,y,label,o={}){const[eu,ed]=o.ext||[8,4];let s=line(x1,y,x2,y,"dim")+line(x1,y-eu,x1,y+ed,"dim")+line(x2,y-eu,x2,y+ed,"dim")+tick(x1,y)+tick(x2,y);
+ if(Math.abs(x2-x1)>tw(label)+10)s+=T((x1+x2)/2,y-6,label,o.cls||"","middle");
+ else if(o.out==="l")s+=line(x1-16,y,x1,y,"dim")+T(x1-18,y-6,label,o.cls||"","end");
+ else s+=line(x2,y,x2+16,y,"dim")+T(x2+18,y-6,label,o.cls||"","start");
+ return s}
+function chainH(xs,labels,y,o={}){const[eu,ed]=o.ext||[8,4];let s=line(xs[0],y,xs[xs.length-1],y,"dim");
+ xs.forEach(x=>{s+=line(x,y-eu,x,y+ed,"dim")+tick(x,y)});
+ labels.forEach((lb,i)=>{const a=xs[i],b=xs[i+1];
+  if(b-a>tw(lb)+10)s+=T((a+b)/2,y-6,lb,"","middle");
+  else if(i===0)s+=T(a-6,y-6,lb,"","end");
+  else if(i===labels.length-1)s+=T(b+6,y-6,lb,"","start");
+  else s+=T((a+b)/2,y+15,lb,"","middle")});
+ return s}
+function dimV(x,y1,y2,label,side="r"){const t=side==="r"?T(x+7,(y1+y2)/2+4,label):T(x-7,(y1+y2)/2+4,label,"","end");return line(x,y1,x,y2,"dim")+line(x-4,y1,x+4,y1,"dim")+line(x-4,y2,x+4,y2,"dim")+tick(x,y1)+tick(x,y2)+t}
+const svgOpen=(w,h,label)=>`<svg class="dia" viewBox="0 0 ${w} ${r1(h)}" role="img" aria-label="${esc(label)}">`;
+/* svislý okraj se zlomem (deska pokračuje) */
+function zz(x,ya,yb,dir){const ym=(ya+yb)/2,sg=yb>ya?1:-1,a=5*dir;return `L${r1(x)} ${r1(ym-6*sg)}L${r1(x+a)} ${r1(ym-2*sg)}L${r1(x-a)} ${r1(ym+2*sg)}L${r1(x)} ${r1(ym+6*sg)}L${r1(x)} ${r1(yb)}`}
+/* šrafy; předpona PFX odliší kresby na stránce a v PDF protokolu */
+let PFX="pg";
+function pats(p){return `<defs><pattern id="${p}-hw" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" class="pf-bg"/><line x1="0" y1="0" x2="0" y2="7" class="pf-l"/></pattern>
+<pattern id="${p}-iso" width="10" height="7" patternUnits="userSpaceOnUse"><rect width="10" height="7" class="pf-bg2"/><path d="M0 7L5 0L10 7" class="pf-l"/></pattern>
+<pattern id="${p}-tile" width="16" height="8" patternUnits="userSpaceOnUse"><rect width="16" height="8" class="pf-bg"/><line x1="0.5" y1="0" x2="0.5" y2="8" class="pf-l"/></pattern>
+<pattern id="${p}-dots" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" class="pf-conc"/><circle cx="2" cy="2" r="0.9" class="pf-d"/><circle cx="6" cy="6" r="0.9" class="pf-d"/></pattern></defs>`}
+
+/* ---------- malé ilustrace a nápověda ---------- */
+const FIG={
+a:'<svg viewBox="0 0 240 112"><defs><marker id="ar" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L6 3L0 6z" fill="currentColor"/></marker></defs><g fill="none" stroke="currentColor" stroke-width="1.2"><rect x="30" y="40" width="180" height="10"/><rect x="10" y="50" width="40" height="20"/><rect x="190" y="50" width="40" height="20"/><path d="M30 16H210"/><path marker-end="url(#ar)" d="M45 16V38M85 16V38M125 16V38M165 16V38M200 16V38"/><path stroke-width=".8" d="M50 84H190M50 78v12M190 78v12M40 100H200M40 94v12M200 94v12"/></g><text x="216" y="20">f</text><text x="116" y="81">l</text><text x="112" y="111">leff</text><text x="14" y="82">t</text></svg>',
+b:'<svg viewBox="0 0 200 112"><g fill="none" stroke="currentColor" stroke-width="1.2"><rect x="50" y="12" width="80" height="86"/><circle cx="68" cy="84" r="4"/><circle cx="90" cy="84" r="4"/><circle cx="112" cy="84" r="4"/><path stroke-width=".8" d="M142 12v86M138 12h8M138 98h8M164 12v72M160 12h8M160 84h8M40 80v18M36 80h8M36 98h8"/></g><text x="146" y="58">h</text><text x="168" y="50">d</text><text x="26" y="92">c</text></svg>',
+c:'<svg viewBox="0 0 260 112"><defs><marker id="ar" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L6 3L0 6z" fill="currentColor"/></marker></defs><g fill="none" stroke="currentColor" stroke-width="1.2"><rect x="8" y="10" width="34" height="88"/><circle cx="25" cy="90" r="4"/><path d="M68 10L125 96"/><path stroke-dasharray="3 3" stroke-width=".8" d="M8 28H130M80 10v88"/><rect x="160" y="10" width="26" height="14"/><path marker-end="url(#ar)" d="M212 17H188M212 90H166"/><path stroke-width=".8" d="M232 17v73M228 17h8M228 90h8M146 10v18M142 10h8M142 28h8"/></g><text x="52" y="8">εcu</text><text x="118" y="108">εs</text><text x="158" y="8">fcd</text><text x="214" y="20">Fc</text><text x="214" y="93">Fs</text><text x="236" y="58">zc</text><text x="130" y="22">xu</text></svg>',
+d:'<svg viewBox="0 0 190 110"><g fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 95V10M20 95H170"/><path stroke-width="1.4" d="M20 95C30 30 55 18 80 18S140 22 150 40"/><path stroke-dasharray="3 3" stroke-width=".7" d="M20 18H80M150 95V40"/></g><text x="2" y="21">fcd</text><text x="138" y="106">εcu</text></svg>',
+e:'<svg viewBox="0 0 190 110"><g fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 95V10M20 95H170"/><path stroke-width="1.4" d="M20 95L75 30H150"/><path stroke-dasharray="3 3" stroke-width=".7" d="M20 30H75M75 95V30"/></g><text x="2" y="34">fyd</text><text x="62" y="106">εyd</text></svg>',
+f:'<svg viewBox="0 0 300 100"><g fill="none" stroke="currentColor" stroke-width="1"><rect x="10" y="8" width="200" height="7"/><rect x="10" y="15" width="200" height="5"/><rect x="10" y="20" width="200" height="17"/><rect x="10" y="37" width="200" height="22"/><rect x="10" y="59" width="200" height="26"/><rect x="10" y="85" width="200" height="5"/></g><text x="216" y="14">dlažba</text><text x="216" y="20">lepidlo</text><text x="216" y="31">podkl. beton</text><text x="216" y="50">izolace</text><text x="216" y="74">ŽB deska</text><text x="216" y="90">omítka</text></svg>'};
+const FN={a:"Statické schéma: světlé rozpětí l<sub>n</sub>, účinné rozpětí l<sub>eff</sub>, uložení t",b:"Příčný řez: tloušťka h, účinná výška d, krytí c",c:"Ohyb: přetvoření, napětí v betonu, síly F<sub>c</sub> a F<sub>s</sub>, rameno z<sub>c</sub>",d:"Pracovní diagram betonu (σ–ε), mezní přetvoření ε<sub>cu</sub>",e:"Pracovní diagram oceli (σ–ε), mez kluzu f<sub>yd</sub> při ε<sub>yd</sub>",f:"Typická skladba podlahy nad ŽB deskou"};
+$("figs").innerHTML=Object.keys(FIG).map(k=>`<div>${FIG[k]}<p>${FN[k]}</p></div>`).join("");
+const G={ln:["Světlé rozpětí – vzdálenost mezi vnitřními líci podpor.","a"],
+leff:["Účinné rozpětí l<sub>eff</sub> = l<sub>n</sub> + a<sub>1</sub> + a<sub>2</sub>. Osová vzdálenost podpor bere a<sub>i</sub> = t<sub>i</sub>/2. Zkrácená varianta podle EC2 bere a<sub>i</sub> = min(h/2; t<sub>i</sub>/2), což dá menší l<sub>eff</sub>, když je deska tenčí než šířka uložení.","a"],
+t:["Délka uložení desky na podpoře (zeď, průvlak).","a"],
+h:["Tloušťka desky. Když pole necháte prázdné, program začne na l<sub>n</sub>/25 (doporučený rozsah l/25 až l/20, min. 60 mm) a zvětšuje ji po 10 mm, dokud deska ve všech posudcích nevyhoví.","b"],
+gk:["Stálé zatížení g<sub>k</sub> = Σ h·γ všech vrstev stropu včetně ŽB desky (na 1 m²). Objemová tíha železobetonu 25 kN/m³ (24 + 1 za výztuž).","f"],
+qk:["Užitné zatížení podle kategorie užívání (ČSN EN 1991-1-1), např. obchodní prostory kat. D2: 5 kN/m².",""],
+fd:["Návrhové zatížení f<sub>d</sub> = 1,35·g<sub>k</sub> + 1,5·q<sub>k</sub> (třída následků CC2, k<sub>f</sub> = 1,0).",""],
+MEd:["Návrhový ohybový moment – největší uprostřed rozpětí: f<sub>d</sub>·l<sub>eff</sub>²/8. Průběh je v grafu M(x).","a"],
+VEd:["Návrhová posouvající síla u podpory: f<sub>d</sub>·l<sub>eff</sub>/2. Průběh je v grafu V(x).","a"],
+fck:["Charakteristická pevnost betonu v tlaku, např. C25/30 → f<sub>ck</sub> = 25 MPa.",""],
+fcd:["Návrhová pevnost betonu f<sub>cd</sub> = η<sub>cc</sub>·k<sub>tc</sub>·f<sub>ck</sub>/1,5, η<sub>cc</sub> = (40/f<sub>ck</sub>)<sup>1/3</sup> ≤ 1.","d"],
+ktc:["Součinitel stáří betonu při zatížení. Zatížení až po 3 měsících a třída vývoje pevnosti CN: 1,0.",""],
+fyk:["Mez kluzu betonářské oceli, pro B500 je 500 MPa. Návrhová f<sub>yd</sub> = f<sub>yk</sub>/1,15.","e"],
+cd:["Minimální krytí z hlediska prostředí. Suché vnitřní prostředí XC1: 10 mm pro desky (konstrukční třída S3).","b"],
+c:["Nominální krytí c<sub>nom</sub> = max(c<sub>min,dur</sub>; Ø; 10 mm) + Δc<sub>dev</sub> (10 mm).","b"],
+d:["Účinná výška: od tlačeného okraje k těžišti tažené výztuže, d = h − c − Ø/2.","b"],
+Asreq:["Nutná plocha tažené výztuže na 1 m šířky desky.",""],
+Asmin:["Nejmenší plocha výztuže, při které průřez po vzniku trhliny nepraskne křehce. Počítá se z M<sub>cr</sub> s charakteristickými pevnostmi.",""],
+pick:["Automatický výběr zkusí Ø8 až Ø16 a vezme profil s nejmenší plochou výztuže při rozteči aspoň 100 mm.",""],
+xu:["Výška tlačené oblasti (poloha neutrální osy). Náhradní obdélníkový blok napětí má výšku 0,8·x<sub>u</sub>.","c"],
+es:["Přetvoření výztuže. Musí být větší než ε<sub>yd</sub> = f<sub>yd</sub>/E<sub>s</sub>: ocel je na mezi kluzu a porušení je tažené (tvárné, s varováním).","e"],
+zc:["Rameno vnitřních sil mezi F<sub>c</sub> a F<sub>s</sub>: z<sub>c</sub> = d − 0,8x<sub>u</sub>/2.","c"],
+MRd:["Moment na mezi únosnosti M<sub>Rd</sub> = A<sub>s</sub>·f<sub>yd</sub>·z<sub>c</sub>. Musí být ≥ M<sub>Ed</sub>.","c"],
+Mcr:["Moment na mezi vzniku trhlin f<sub>ctm</sub>·b·h²/6. Únosnost ho musí převyšovat, jinak by deska po vzniku trhliny náhle selhala.",""],
+su:["Světlá mezera mezi pruty pro uložení a zhutnění betonu: min. max(Ø; D<sub>upper</sub>+5; 20 mm).",""],
+smax:["Největší osová vzdálenost prutů v desce: min(3h; 400 mm).",""],
+Asr:["Rozdělovací výztuž je kolmá na hlavní, roznáší zatížení a omezuje trhliny. Plocha aspoň 20 % hlavní výztuže, EC2 ji u jednosměrně pnutých desek vyžaduje.",""],
+sup:["Do podpory se obvykle zavádí každý druhý prut hlavní výztuže. Plocha musí být aspoň max(0,25·A<sub>s</sub>; A<sub>s,min</sub>) a rozteč nejvýše s<sub>max</sub>, jinak se do podpory zavedou všechny pruty.",""],
+top:["Horní konstrukční výztuž u podpor pro nezamýšlené částečné vetknutí (deska sevřená zdivem nebo věncem): plocha aspoň max(0,25·A<sub>s</sub>; A<sub>s,min</sub>), rozteč nejvýše s<sub>max</sub>, délka 0,2·l<sub>n</sub> od líce podpory do pole.",""],
+D:["Největší (upper) a nejmenší (lower) rozměr zrn hrubého kameniva.",""],
+tE:["Smykové napětí τ<sub>Ed</sub> = V<sub>Ed1</sub>/(0,9d·b) v řezu ve vzdálenosti d od líce podpory.","a"],
+tmin:["Minimální smyková únosnost bez smykové výztuže: (11/γ<sub>V</sub>)·√(f<sub>ck</sub>/f<sub>yd</sub>·d<sub>dg</sub>/d), γ<sub>V</sub> = 1,4, d<sub>dg</sub> = 16 + D<sub>lower</sub> ≤ 40 mm.",""],
+stav:["<b>Stav I</b>: beton bez trhlin, pracuje i v tahu, výztuž se započítá ideálním průřezem (α<sub>e</sub>·A<sub>s</sub>). Průběh σ je lineární přes celou výšku.<br><b>Stav II</b>: beton v tahu je porušen trhlinami a nepůsobí, tah přenáší jen výztuž.<br><b>MSÚ</b>: zjednodušený návrhový blok f<sub>cd</sub> na výšce 0,8x<sub>u</sub>, výztuž na mezi kluzu.",""],
+ae:["Poměr modulů pružnosti α<sub>e</sub> = E<sub>s</sub>/E<sub>cm</sub>. Výztuž se v ideálním průřezu nahradí α<sub>e</sub>-násobnou plochou betonu.",""]};
+const q=k=>`<span class="q" tabindex="0" data-k="${k}">?</span>`,L=(t,k)=>t+q(k);
+document.querySelectorAll("i[data-q]").forEach(e=>e.outerHTML=q(e.dataset.q));
+const tip=$("tip");
+function tp(e){const s=e.target.closest&&e.target.closest(".q");if(!s){tip.style.display="none";return}const g=G[s.dataset.k];if(!g)return;tip.innerHTML=g[0]+(g[1]?`<div style="margin-top:6px">${FIG[g[1]]}</div>`:"");tip.style.display="block";const r=s.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;tip.style.left=Math.max(8,Math.min(r.left,innerWidth-w-8))+"px";tip.style.top=(r.bottom+h+10>innerHeight?Math.max(8,r.top-h-8):r.bottom+6)+"px"}
+["mouseover","focusin","click"].forEach(v=>document.addEventListener(v,tp));
+["mouseout","focusout"].forEach(v=>document.addEventListener(v,e=>{if(e.target.closest&&e.target.closest(".q"))tip.style.display="none"}));
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("summary .q"))e.preventDefault()});
+
+/* ---------- vstupy ---------- */
+Object.keys(SD.FCT).forEach(f=>$("d_fck").add(new Option(`C${f}/${SD.CL[f]}`,f)));
+$("concTab").innerHTML=`<tr><td>C</td>${Object.keys(SD.FCT).map(f=>`<td>${f}/${SD.CL[f]}</td>`).join("")}</tr><tr><td>f<sub>ctm</sub></td>${Object.values(SD.FCT).map(v=>`<td>${F(v,1)}</td>`).join("")}</tr><tr><td>E<sub>cm</sub></td>${Object.keys(SD.FCT).map(f=>`<td>${F(SD.Ecm(+f)/1000,1)}</td>`).join("")}</tr>`;
+const MATS=[["Kamenná dlažba",26],["Keramická dlažba",23],["Mazanina cementová / podkladní beton",23],["Lepidlo (cementové)",21],["Omítka cementová",21],["Omítka vápenocementová",20],["Tepelná izolace – minerální vlna",1.5],["Tepelná izolace – polystyren",0.3],["Železobeton",25],["Beton prostý nevyztužený",24],["Zdivo z pálených cihel",18],["Vlastní vrstva",""]];
+const matOpts=()=>`<option value="-">— vyberte materiál —</option>`+MATS.map(([n,r])=>`<option value="${r}">${n}</option>`).join("");
+let rowId=0,CUR=null,HAS=false,STALE=false;
+const layerRow=()=>{rowId++;return `<tr><td><select class="ly_n" id="ly_n${rowId}" aria-label="Materiál vrstvy">${matOpts()}</select></td><td><input class="ly_h" id="ly_h${rowId}" type="number" inputmode="decimal" step="1" min="0" placeholder="mm" aria-label="Tloušťka vrstvy v mm" autocomplete="off"></td><td><input class="ly_r" id="ly_r${rowId}" type="number" inputmode="decimal" step="0.1" min="0" placeholder="kN/m³" aria-label="Objemová tíha v kN/m³" autocomplete="off"></td><td class="num ly_g">–</td><td><button type="button" class="rm" aria-label="Odebrat vrstvu">✕</button></td></tr>`};
+$("d_lb").innerHTML=`<tr class="slab"><td>Železobetonová deska</td><td><input id="slab_h" type="text" readonly value="z návrhu" aria-label="Tloušťka ŽB desky z návrhu v mm"></td><td><input id="slab_g" type="number" value="25" step="0.5" aria-label="Objemová tíha železobetonu v kN/m³"></td><td class="num" id="slab_gv">–</td><td></td></tr>`;
+const slabG=()=>{const v=val("slab_g");return v>0?v:25};
+function slabH(){const hm=val("d_h");return hm>0?hm:(CUR&&!STALE?CUR.h:0)}
+function gPreview(){const h=slabH(),gs=slabG();let sum=0;
+ document.querySelectorAll("#d_lb tr:not(.slab)").forEach(tr=>{const hh=parseFloat(tr.querySelector(".ly_h").value),r=parseFloat(tr.querySelector(".ly_r").value),ok=hh>0&&r>=0&&isFinite(r);tr.querySelector(".ly_g").textContent=ok?F(hh/1000*r,3):"–";if(ok)sum+=hh/1000*r});
+ $("slab_h").value=h?F(h,0):"z návrhu";$("slab_gv").textContent=h?F(h/1000*gs,3):"–";
+ $("d_gsum").textContent=h?F(sum+h/1000*gs,3)+" kN/m²":F(sum,3)+" kN/m² + deska"}
+$("d_lb").addEventListener("change",e=>{if(e.target.classList.contains("ly_n")){const r=e.target.closest("tr").querySelector(".ly_r");if(e.target.value!=="-"){r.value=e.target.value;if(e.target.value==="")r.focus()}}gPreview()});
+$("d_lb").addEventListener("input",gPreview);
+$("d_lb").addEventListener("click",e=>{if(e.target.classList.contains("rm")){e.target.closest("tr").remove();canAdd();gPreview();markStale()}});
+const MAXL=12,canAdd=()=>{const n=document.querySelectorAll("#d_lb tr:not(.slab)").length;$("addAbove").disabled=$("addBelow").disabled=n>=MAXL;return n<MAXL};
+$("addAbove").addEventListener("click",()=>{if(!canAdd())return;$("d_lb").querySelector("tr.slab").insertAdjacentHTML("beforebegin",layerRow());canAdd();gPreview();markStale()});
+$("addBelow").addEventListener("click",()=>{if(!canAdd())return;$("d_lb").insertAdjacentHTML("beforeend",layerRow());canAdd();gPreview();markStale()});
+$("d_rz").addEventListener("change",()=>{$("d_prwrap").hidden=!$("d_rz").checked});
+$("d_h").addEventListener("input",gPreview);
+function markStale(){if(!HAS||STALE)return;STALE=true;document.body.classList.add("stale");$("staleMsg").hidden=false;updPrint();gPreview()}
+$("inputs").addEventListener("input",e=>{if(e.target.hasAttribute("aria-invalid"))e.target.removeAttribute("aria-invalid");markStale()});
+$("inputs").addEventListener("change",markStale);
+
+/* načtení zadání s kontrolou úplnosti */
+function readForm(){const errs=[],bad=[];
+ const rng=(lo,hi)=>` (povoleno ${Fn(lo)} až ${Fn(hi)})`;
+ const need=(id,name,lo,hi)=>{const v=val(id);if(!isFinite(v)){errs.push(name);bad.push(id)}else if(v<lo||v>hi){errs.push(name+rng(lo,hi));bad.push(id)}return v};
+ const opt=(id,name,lo,hi,def)=>{if(String($(id).value).trim()==="")return def;const v=val(id);if(!(v>=lo&&v<=hi)){errs.push(name+rng(lo,hi));bad.push(id);return def}return v};
+ const ln=need("d_ln","světlé rozpětí l<sub>n</sub> v m",0.5,15);
+ const t1=need("d_t1","uložení t<sub>1</sub> v mm",50,1500),t2=need("d_t2","uložení t<sub>2</sub> v mm",50,1500);
+ const h=opt("d_h","tloušťka h v mm",60,600,0);
+ const fck=+$("d_fck").value;if(!SD.FCT[fck]){errs.push("třída betonu");bad.push("d_fck")}
+ const qk=need("d_q","užitné zatížení q<sub>k</sub>",0,50);
+ const rows=[];let k=0;
+ document.querySelectorAll("#d_lb tr").forEach(tr=>{
+  if(tr.classList.contains("slab")){rows.push({n:"Železobetonová deska",slab:true,h:0,r:slabG()});return}
+  k++;const sel=tr.querySelector(".ly_n"),hi=tr.querySelector(".ly_h"),ri=tr.querySelector(".ly_r"),hh=parseFloat(hi.value),rr=parseFloat(ri.value),none=sel.value==="-";
+  if(none&&!(hh>0)&&!isFinite(rr))return;
+  if(!(hh>0&&hh<=500)){errs.push(`tloušťka ${k}. vrstvy`+rng(1,500));bad.push(hi.id)}
+  if(!(rr>=0&&rr<=100)){errs.push(`objemová tíha ${k}. vrstvy`+rng(0,100));bad.push(ri.id)}
+  rows.push({n:none?`Vrstva ${k}`:sel.selectedOptions[0].text,h:hh,r:rr})});
+ const gs=slabG();if(!(gs>=15&&gs<=30)){errs.push("objemová tíha ŽB desky"+rng(15,30));bad.push("slab_g")}
+ const gl=rows.filter(r=>!r.slab).reduce((a,r)=>a+(r.h>0&&r.r>=0?r.h/1000*r.r:0),0);
+ const ph=+$("d_p").value,pr=+$("d_pr").value;
+ const P={ln,t1:t1/1000,t2:t2/1000,lm:$("d_lm").value==="ec2"?"ec2":"axis",rows,gl,gs,qk,fck,
+  fyk:opt("d_fyk","f<sub>yk</sub> v MPa",200,700,500),cd:opt("d_cd","c<sub>min,dur</sub> v mm",0,80,10),ktc:opt("d_ktc","k<sub>tc</sub>",0.5,1,1),
+  Du:opt("d_du","D<sub>upper</sub> v mm",4,63,16),Dl:opt("d_dl","D<sub>lower</sub> v mm",2,63,8),
+  ph:[6,8,10,12,14,16,18,20,22,25].includes(ph)?ph:0,pr:[6,8,10,12,14,16].includes(pr)?pr:6,rz:$("d_rz").checked,h:h>0?h:0};
+ return{errs,bad,P}}
+
+/* ---------- sdílené tabulky (stránka i PDF) ---------- */
+const rw=(a,b,em)=>`<tr${em?' class="em"':""}><td>${a}</td><td>${b}</td></tr>`;
+const ck=(a,b,ok)=>`<tr><td>${a}</td><td class="${ok?"ok":"bad"}">${b} ${ok?"✓":"✗"}</td></tr>`;
+const kv=(rows,cls="")=>`<table class="kv ${cls}">${rows.join("")}</table>`;
+const pnl=(t,b)=>`<h3>${t}</h3>${b}`;
+function geoKV(R){const P=R.P,ec=P.lm==="ec2";return pnl("Geometrie",kv([
+ rw(L("Světlé rozpětí l<sub>n</sub>","ln"),F(P.ln,3)+" m"),rw("Uložení t<sub>1</sub> ; t<sub>2</sub>",Fi(P.t1*1000)+" ; "+Fi(P.t2*1000)+" mm"),
+ rw(`a<sub>1</sub> ; a<sub>2</sub> = ${ec?"min(h/2; t/2)":"t/2"}`,Fi(R.a1*1000)+" ; "+Fi(R.a2*1000)+" mm"),rw(L("Účinné rozpětí l<sub>eff</sub>","leff"),F(R.le,3)+" m",1),
+ rw(L("Tloušťka desky h","h")+(R.auto?" (navržena)":" (zadána)"),F(R.h,0)+" mm",1),rw("Doporučený rozsah l/25 až l/20",R.lo+"–"+R.hi+" mm")]))}
+function loadKV(R){const P=R.P;return pnl("Zatížení na 1 m²",kv([
+ rw("Podlaha a další vrstvy",F(P.gl,3)+" kN/m²"),rw(`ŽB deska ${F(R.h/1000,3)} m · ${F(P.gs,1)} kN/m³`,F(R.gself,3)+" kN/m²"),
+ rw(L("Stálé g<sub>k</sub>","gk"),F(R.gk,3)+" kN/m²",1),rw(L("Užitné q<sub>k</sub>","qk"),F(P.qk,2)+" kN/m²"),
+ rw("Charakteristické f<sub>k</sub> = g<sub>k</sub> + q<sub>k</sub>",F(R.fk,2)+" kN/m²"),rw(L("Návrhové f<sub>d</sub> = 1,35g<sub>k</sub> + 1,5q<sub>k</sub>","fd"),F(R.fd,2)+" kN/m²",1)]))}
+function forceKV(R){const ok=okSec(R);return pnl("Účinky zatížení",kv([
+ rw(L("M<sub>Ed</sub> = f<sub>d</sub>·l<sub>eff</sub>²/8","MEd"),F(R.M,2)+" kNm/m",1),rw("poloha x = l<sub>eff</sub>/2",F(R.le/2,3)+" m"),
+ rw(L("V<sub>Ed</sub> = R<sub>A</sub> = R<sub>B</sub>","VEd"),F(R.V,2)+" kN/m",1),
+ ...(ok?[rw("V<sub>Ed1</sub> v řezu d od líce",F(R.VE1,2)+" kN/m"),rw("poloha x = a<sub>1</sub> + d",F(R.a1+R.o.d/1000,3)+" m")]:[]),
+ rw("M<sub>Ek</sub> od g<sub>k</sub> + q<sub>k</sub> (pro stav I, II)",F(R.Mk,2)+" kNm/m")]))}
+function resistKV(R){if(!okSec(R))return"";return pnl("Únosnost průřezu",kv([
+ rw(L("M<sub>Rd</sub> = A<sub>s</sub>·f<sub>yd</sub>·z<sub>c</sub>","MRd"),F(R.MRd,2)+" kNm/m",1),rw("Využití M<sub>Ed</sub>/M<sub>Rd</sub>",F(R.M/R.MRd*100,0)+" %"),
+ rw(L("M<sub>cr</sub> = f<sub>ctm</sub>·b·h²/6","Mcr"),F(R.o.Mcr,2)+" kNm/m"),
+ rw("V<sub>Rd</sub> = τ<sub>Rd</sub>·0,9d·b",F(R.VRd,2)+" kN/m",1),rw("Využití V<sub>Ed1</sub>/V<sub>Rd</sub>",F(R.VE1/R.VRd*100,0)+" %")]))}
+function rbKV(R){const P=R.P,o=R.o;return pnl("Návrh výztuže",kv([
+ rw(L("Krytí c<sub>nom</sub> = max(c<sub>min,dur</sub>; Ø; 10) + 10","c"),F(o.c,0)+" mm"),rw(L("Účinná výška d = h − c − Ø/2","d"),F(o.d,1)+" mm"),
+ rw(L("Nutná plocha A<sub>s,req</sub>","Asreq"),F(o.Ar,0)+" mm²/m"),rw(L("Minimální plocha A<sub>s,min</sub>","Asmin"),F(o.Am,0)+" mm²/m"),
+ rw("<b>Hlavní výztuž</b>",`Ø${o.ph} po ${o.s} mm`,1),rw("Navržená plocha A<sub>s</sub>",F(o.As,0)+" mm²/m",1),rw("Počet prutů na 1 m šířky",F(1000/o.s,1)),
+ rw(L("Světlá mezera s<sub>u</sub> = s − Ø","su"),F(R.su,0)+" mm (min. "+F(R.sum,0)+")"),rw(L("Největší rozteč s<sub>max</sub> = min(3h; 400)","smax"),F(R.smax,0)+" mm"),
+ ...(P.rz?[rw(L("Rozdělovací A<sub>sr</sub> ≥ 0,2·A<sub>s</sub>","Asr"),F(R.Asr,0)+" mm²/m"),rw("<b>Rozdělovací výztuž</b>",`Ø${P.pr} po ${R.sr} mm`,1),rw("Navržená plocha A<sub>sr</sub>",F(R.Asrp,0)+" mm²/m")]:[rw(L("Rozdělovací výztuž","Asr"),"vypnuta")]),
+ rw(L("Do podpory","sup")+(R.half?" (každý 2. prut)":" (všechny pruty)"),`Ø${o.ph} po ${R.ssup} mm, ${F(R.Asl,0)} mm²/m`),
+ rw(L("<b>Horní výztuž u podpor</b>","top"),`Ø${R.top.ph} po ${R.top.s} mm`,1),rw("plocha ; délka od líce 0,2·l<sub>n</sub>",F(R.top.A,0)+" mm²/m ; "+Fi(R.ltop*1000)+" mm")]))}
+function candTab(R){const o=R.o;if(!o.cands||!o.cands.length)return `<h3>Výběr profilu</h3><p class="note" style="margin:0">Průměr hlavní výztuže je zadán ručně (Ø${o.ph}).</p>`;
+ return `<h3>Výběr profilu</h3><table class="kv lt"><thead><tr><th>Profil</th><th>d (mm)</th><th>A<sub>s,req</sub></th><th>s (mm)</th><th>A<sub>s</sub></th></tr></thead><tbody>${o.cands.map(k=>{const sel=k.ph===o.ph;return `<tr${sel?' class="em"':""}><td>Ø${k.ph}${sel?" – zvoleno":k.s<100?" – rozteč pod 100 mm":""}</td><td>${F(k.d,1)}</td><td>${F(k.Ar,0)}</td><td>${k.s}</td><td>${F(k.As,0)}</td></tr>`}).join("")}</tbody></table><p class="note">Pro každý průměr se rozteč zaokrouhlí dolů na násobek 25 mm. Rozteče pod 100 mm se vyřadí a zvolí se profil s nejmenší navrženou plochou (mm²/m).</p>`}
+function bendKV(R){const c=R.checks;return pnl("Posudek průřezu uprostřed rozpětí",kv([
+ rw(L("Výška tlačené oblasti x<sub>u</sub>","xu"),F(R.xu,1)+" mm"),rw("Výška bloku 0,8·x<sub>u</sub>",F(0.8*R.xu,1)+" mm"),
+ ck(L("ε<sub>s</sub> &gt; ε<sub>yd</sub> (mez kluzu)","es"),F(R.es,1)+" &gt; "+F(R.eyd,2)+" ‰",c.es),rw(L("Rameno z<sub>c</sub> = d − 0,4x<sub>u</sub>","zc"),F(R.zc,1)+" mm"),
+ rw("F<sub>c</sub> = F<sub>s</sub> = A<sub>s</sub>·f<sub>yd</sub>",F(R.Fs,1)+" kN/m"),ck(L("M<sub>Rd</sub> ≥ M<sub>Ed</sub>","MRd"),F(R.MRd,2)+" ≥ "+F(R.M,2)+" kNm",c.MRd),
+ ck(L("M<sub>cr</sub> ≤ M<sub>Rd</sub>","Mcr"),F(R.o.Mcr,2)+" ≤ "+F(R.MRd,2)+" kNm",c.Mcr),ck(L("A<sub>s</sub> ≥ A<sub>s,min</sub>","Asmin"),F(R.o.As,0)+" ≥ "+F(R.o.Am,0)+" mm²",c.Asmin)]))}
+function matKV(R){const P=R.P;return pnl("Materiály",kv([
+ rw(`Beton ${clsName(P.fck)}: f<sub>ck</sub>`,P.fck+" MPa"),rw(L("f<sub>cd</sub> = η<sub>cc</sub>·k<sub>tc</sub>·f<sub>ck</sub>/1,5","fcd"),F(R.fcd,2)+" MPa"),rw("η<sub>cc</sub> ; k<sub>tc</sub>",F(R.eta,2)+" ; "+F(P.ktc,2)),
+ rw("f<sub>ctm</sub> ; E<sub>cm</sub>",F(R.fctm,1)+" MPa ; "+F(R.Ecm/1000,1)+" GPa"),rw("ε<sub>cu</sub>","3,5 ‰"),
+ rw("Výztuž: f<sub>yk</sub> ; f<sub>yd</sub>",F(P.fyk,0)+" ; "+F(R.fyd,1)+" MPa"),rw("E<sub>s</sub> ; ε<sub>yd</sub> = f<sub>yd</sub>/E<sub>s</sub>","200 GPa ; "+F(R.eyd,2)+" ‰")]))}
+function shKV(R){const o=R.o,min=R.tE<=R.tmin;return pnl("Posudek na smyk",kv([
+ rw("V<sub>Ed</sub> u podpory",F(R.V,2)+" kN/m"),rw("V<sub>Ed1</sub> = V<sub>Ed</sub> − f<sub>d</sub>(d + a<sub>1</sub>)",F(R.VE1,2)+" kN/m",1),
+ rw(L("τ<sub>Ed</sub> = V<sub>Ed1</sub>/(0,9·d·b)","tE"),F(R.tE,3)+" MPa",1),rw("d<sub>dg</sub> = 16 + D<sub>lower</sub> ≤ 40",F(R.ddg,0)+" mm"),
+ rw(L("τ<sub>Rdc,min</sub>","tmin"),F(R.tmin,3)+" MPa"),
+ ...(min?[ck("τ<sub>Ed</sub> ≤ τ<sub>Rdc,min</sub>",F(R.tE,3)+" ≤ "+F(R.tmin,3),true)]:[rw("ρ<sub>l</sub> = A<sub>sl</sub>/(b·d)",F(R.rho*100,3)+" %"),rw("τ<sub>Rdc</sub>",F(R.tR,3)+" MPa"),ck("τ<sub>Ed</sub> ≤ τ<sub>Rdc</sub>",F(R.tE,3)+" ≤ "+F(R.tR,3),R.checks.shear)]),
+ rw("Využití",F(R.tE/R.tR*100,0)+" %")]))}
+function checkList(R){const o=R.o,P=R.P,c=R.checks,A=[];
+ A.push({n:L("Únosnost v ohybu","MRd"),cond:`M<sub>Ed</sub> = ${F(R.M,2)} ≤ M<sub>Rd</sub> = ${F(R.MRd,2)} kNm/m`,u:R.M/R.MRd,ok:c.MRd});
+ A.push({n:L("Výztuž na mezi kluzu","es"),cond:`ε<sub>s</sub> = ${F(R.es,1)} ‰ &gt; ε<sub>yd</sub> = ${F(R.eyd,2)} ‰`,u:R.eyd/R.es,ok:c.es});
+ A.push({n:L("Porušení při vzniku trhliny","Mcr"),cond:`M<sub>cr</sub> = ${F(o.Mcr,2)} ≤ M<sub>Rd</sub> = ${F(R.MRd,2)} kNm/m`,u:o.Mcr/R.MRd,ok:c.Mcr});
+ A.push({n:L("Minimální vyztužení","Asmin"),cond:`A<sub>s</sub> = ${F(o.As,0)} ≥ A<sub>s,min</sub> = ${F(o.Am,0)} mm²/m`,u:o.Am/o.As,ok:c.Asmin});
+ A.push({n:L("Světlá mezera prutů","su"),cond:`s<sub>u</sub> = ${F(R.su,0)} ≥ ${F(R.sum,0)} mm`,u:R.sum/R.su,ok:c.su});
+ A.push({n:L("Rozteč hlavní výztuže","smax"),cond:`s = ${o.s} ≤ s<sub>max</sub> = ${F(R.smax,0)} mm`,u:o.s/R.smax,ok:c.smax});
+ if(P.rz){A.push({n:L("Plocha rozdělovací výztuže","Asr"),cond:`A<sub>sr</sub> = ${F(R.Asrp,0)} ≥ 0,2·A<sub>s</sub> = ${F(R.Asr,0)} mm²/m`,u:R.Asr/R.Asrp,ok:c.Asr});
+  A.push({n:"Rozteč rozdělovací výztuže",cond:`s<sub>r</sub> = ${R.sr} ≤ s<sub>max</sub> = ${F(R.smax,0)} mm`,u:R.sr/R.smax,ok:c.sr})}
+ A.push({n:L("Výztuž zavedená do podpory","sup"),cond:`A<sub>sl</sub> = ${F(R.Asl,0)} ≥ ${F(R.supNeed,0)} mm²/m; s = ${R.ssup} ≤ ${F(R.smax,0)} mm`,u:Math.max(R.supNeed/R.Asl,R.ssup/R.smax),ok:c.sup});
+ A.push({n:L("Horní výztuž u podpor","top"),cond:`A = ${F(R.top.A,0)} ≥ ${F(R.supNeed,0)} mm²/m; s = ${R.top.s} ≤ ${F(R.smax,0)} mm`,u:Math.max(R.supNeed/R.top.A,R.top.s/R.smax),ok:c.top});
+ const mn=R.tE<=R.tmin;A.push({n:L("Smyk bez smykové výztuže","tE"),cond:`τ<sub>Ed</sub> = ${F(R.tE,3)} ≤ ${mn?"τ<sub>Rdc,min</sub>":"τ<sub>Rdc</sub>"} = ${F(mn?R.tmin:R.tR,3)} MPa`,u:R.tE/R.tR,ok:c.shear});
+ return A}
+function checksTable(R){const A=checkList(R);return `<div class="wrap"><table class="checks"><thead><tr><th>Posudek</th><th>Podmínka</th><th>Využití</th><th><span class="vh">Výsledek</span></th></tr></thead><tbody>${A.map(x=>`<tr><td>${x.n}</td><td class="cond">${x.cond}</td><td class="u"><div class="ubar"><i><b class="${x.ok?"":"bad"}" style="width:${Math.min(100,x.u*100).toFixed(1)}%"></b></i><span>${F(x.u*100,0)} %</span></div></td><td class="r ${x.ok?"ok":"bad"}">${x.ok?"✓":"✗"}</td></tr>`).join("")}</tbody></table></div>`}
+function allOk(R){return okSec(R)&&checkList(R).every(x=>x.ok)}
+function tilesHTML(R){const P=R.P,o=R.o;const t=[["Tloušťka desky",`h = ${F(R.h,0)} mm`,R.auto?`navržena, l/25 až l/20 = ${R.lo}–${R.hi} mm`:"zadána ručně"],
+ ["Hlavní výztuž",`Ø${o.ph} po ${o.s} mm`,`A<sub>s</sub> = ${F(o.As,0)} mm²/m, f<sub>yk</sub> = ${F(P.fyk,0)} MPa`],
+ ["Rozdělovací výztuž",P.rz?`Ø${P.pr} po ${R.sr} mm`:"vypnuta",P.rz?`A<sub>sr</sub> = ${F(R.Asrp,0)} mm²/m`:"lze zapnout v zadání"],
+ ["Beton",clsName(P.fck),`c<sub>nom</sub> = ${F(o.c,0)} mm, d = ${F(o.d,0)} mm`]];
+ return `<div class="tiles">${t.map(x=>`<div class="tile"><div class="k">${x[0]}</div><div class="v">${x[1]}</div><div class="s">${x[2]}</div></div>`).join("")}</div>`}
+const utilTxt=R=>`využití v ohybu ${F(R.M/R.MRd*100,0)} %, ve smyku ${F(R.tE/R.tR*100,0)} %`;
+function verdictHTML(R){const ok=checkList(R).every(x=>x.ok);return `<p class="verdict ${ok?"ok":"bad"}">${ok?"✓ Deska vyhovuje ve všech posudcích":"✗ Některý posudek nevyhověl – upravte zadání"} <span>· ${utilTxt(R)}</span></p>`}
+const NOTE_END="Průhyb, šířka trhlin a kotvení výztuže v tomto výpočtu posouzeny nejsou.";
+const DISC="Upozornění: Výpočet má pouze informativní a pomocný charakter a slouží jako podpora při předběžném návrhu. Nenahrazuje statický výpočet ani projektovou dokumentaci, které musí zpracovat a ověřit autorizovaná osoba. Výsledky nejsou závazné a jejich správnost je nutné vždy nezávisle ověřit. Autor nepřebírá žádnou odpovědnost za škody vzniklé použitím výsledků; použitím nástroje s tím uživatel souhlasí.";
+$("disc").textContent=DISC;
+const BADSEC=`<p class="sum bad">Průřez nevyhoví ani s nejmenší výztuží, tlačená oblast by přesáhla výšku desky. Zvětšete tloušťku h nebo třídu betonu.</p>`;
+
+/* ---------- podélný řez s kótami ---------- */
+function geomFig(R){const P=R.P,o=R.o,t1=P.t1,t2=P.t2,ln=P.ln,a1=R.a1,a2=R.a2,le=R.le,h=R.h,p=PFX+"g";
+ const W=800,L0=130,kx=(W-L0-110)/(t1+ln+t2),X=m=>L0+(m+t1)*kx;
+ const si=P.rows.findIndex(r=>r.slab),ab=P.rows.slice(0,si).reduce((a,r)=>a+(r.h||0),0),be=P.rows.slice(si+1).reduce((a,r)=>a+(r.h||0),0);
+ const Hs=38,kv=Hs/h,Hf=ab>0?Math.max(8,Math.min(44,ab*kv)):0,Hb=be>0?Math.max(3,Math.min(14,be*kv)):0;
+ const yLe=26,yCh=56,yF=86,yS=yF+Hf,yB=yS+Hs,yW=yB+86,yBot=yW+30,H=yBot+12;
+ const xa1=X(-a1),xa2=X(ln+a2),xf1=X(0),xf2=X(ln);let s="";
+ s+=`<rect x="${r1(X(-t1))}" y="${r1(yB)}" width="${r1(t1*kx)}" height="${yW-yB}" fill="url(#${p}-hw)" class="wall"/><rect x="${r1(xf2)}" y="${r1(yB)}" width="${r1(t2*kx)}" height="${yW-yB}" fill="url(#${p}-hw)" class="wall"/>`;
+ if(Hf)s+=`<rect x="${r1(xf1)}" y="${yF}" width="${r1(ln*kx)}" height="${r1(Hf)}" class="floor"/>`+T(xf1+8,yF-7,`podlahové vrstvy ${Fn(ab)} mm`,"t-mu");
+ s+=`<rect x="${r1(X(-t1))}" y="${r1(yS)}" width="${r1((t1+ln+t2)*kx)}" height="${Hs}" class="conc"/>`;
+ if(Hb)s+=`<rect x="${r1(xf1)}" y="${r1(yB)}" width="${r1(ln*kx)}" height="${r1(Hb)}" class="floor"/>`;
+ if(okSec(R)){const yd=yS+o.d*kv,ct=Math.max(P.cd,R.top.ph,10)+10,yt=yS+(ct+R.top.ph/2)*kv;s+=line(X(-t1)+5,yd,X(ln+t2)-5,yd,"rebar");
+  s+=line(X(-t1)+5,yt,X(R.ltop),yt,"rebar")+line(X(ln-R.ltop),yt,X(ln+t2)-5,yt,"rebar")+T(X(R.ltop)+6,yt+4,`horní Ø${R.top.ph} po ${R.top.s}`,"t-th")}
+ s+=T(X(ln*0.68),yS+Hs/2+6,`ŽB deska h = ${Fn(h)} mm`,"t-b","middle");
+ [xa1,xa2].forEach(x=>{s+=line(x,yLe-12,x,yW+6,"axis")+`<circle cx="${r1(x)}" cy="${r1(yB)}" r="3.5" class="dot"/>`});
+ s+=dimH(xa1,xa2,yLe,`l_{eff} = ${Fi(le*1000)} mm`,{ext:[4,4],cls:"t-ac t-b"});
+ s+=chainH([xa1,xf1,xf2,xa2],[`a_{1} = ${Fi(a1*1000)}`,`l_{n} = ${Fi(ln*1000)}`,`a_{2} = ${Fi(a2*1000)}`],yCh,{ext:[4,yF-yCh-2]});
+ s+=chainH([X(-t1),xf1,xf2,X(ln+t2)],[`t_{1} = ${Fi(t1*1000)}`,`l_{n} = ${Fi(ln*1000)}`,`t_{2} = ${Fi(t2*1000)}`],yBot,{ext:[yBot-yW-2,4]});
+ s+=dimV(X(ln+t2)+22,yS,yB,`h = ${Fn(h)}`);
+ const xm=X(-a1+le/2),ym=yB+Hb;
+ s+=line(xm,yF-4,xm,ym+34,"ln-mu dash")+`<circle cx="${r1(xm)}" cy="${r1(yB)}" r="4.5" class="dot"/>`;
+ s+=T(xm,ym+50,`M_{Ed,max} = ${F(R.M,2)} kNm/m`,"t-ac t-b","middle")+T(xm,ym+66,`x = l_{eff}/2 = ${F(le/2,3)} m od osy uložení`,"t-mu","middle");
+ if(okSec(R)){const dm=o.d/1000,xd1=X(dm),xd2=X(ln-dm),yc=ym+16;
+  s+=line(xd1,yS-8,xd1,ym+4,"cut")+line(xd2,yS-8,xd2,ym+4,"cut");
+  s+=dimH(xf1,xd1,yc,"d",{ext:[yc-ym,4],out:"r"})+dimH(xd2,xf2,yc,"d",{ext:[yc-ym,4],out:"l"});
+  s+=T(xd1+4,yc+18,"řez pro V_{Ed1}","t-th")+T(xd2-4,yc+18,"řez pro V_{Ed1}","t-th","end")}
+ return svgOpen(W,H,`Podélný řez deskou: l_n ${F(ln,2)} m, l_eff ${F(le,3)} m, h ${h} mm`)+pats(p)+s+"</svg>"}
+
+/* ---------- skladba stropu ---------- */
+function matFill(r,p){const n=r.n.toLowerCase();if(r.slab)return 'class="conc"';
+ if(/izolace|vlna|polystyren/.test(n))return `fill="url(#${p}-iso)" class="lyr"`;
+ if(/dlažba/.test(n))return `fill="url(#${p}-tile)" class="lyr"`;
+ if(/mazanina|beton|železobeton/.test(n))return `fill="url(#${p}-dots)" class="lyr"`;
+ if(/zdivo|cihl/.test(n))return `fill="url(#${p}-hw)" class="lyr"`;
+ return 'class="lyr pl"'}
+function layersFig(R){const P=R.P,p=PFX+"l",rows=P.rows.map(r=>r.slab?Object.assign({},r,{h:R.h}):r);
+ const k=0.42,hh=rows.map(r=>Math.max(17,r.h*k)),W=640,x0=20,wS=140,xt=x0+wS+14,xh=W-170,xr=W-85,xg=W-10,top=90;let s="",y=top;
+ s+=T(xt,18,"VRSTVA","t-h")+T(xh,18,"h [mm]","t-h","end")+T(xr,18,"γ [kN/m³]","t-h","end")+T(xg,18,"g [kN/m²]","t-h","end");
+ s+=`<rect x="${x0}" y="36" width="${wS}" height="8" class="band"/>`;
+ for(let i=0;i<7;i++){const x=x0+8+i*(wS-16)/6;s+=arrow(x,44,x,top-3,"a-ink",6)}
+ s+=T(xt,62,"užitné zatížení q_{k}","t-ac")+T(xg,62,F(P.qk,2),"t-ac t-b","end");
+ rows.forEach((r,i)=>{const hy=hh[i];s+=`<rect x="${x0}" y="${r1(y)}" width="${wS}" height="${r1(hy)}" ${matFill(r,p)}/>`;
+  if(r.slab&&okSec(R)){const yd=y+hy*R.o.d/R.h;for(let j=0;j<6;j++)s+=`<circle cx="${r1(x0+12+j*(wS-24)/5)}" cy="${r1(yd)}" r="2.6" class="bar"/>`}
+  const yc=y+hy/2+4,c=r.slab?"t-b":"";s+=T(xt,yc,r.n,c)+T(xh,yc,Fn(r.h),c,"end")+T(xr,yc,F(r.r,1),c,"end")+T(xg,yc,F(r.h/1000*r.r,3),c,"end");y+=hy});
+ s+=line(xt,y+10,xg,y+10,"ln-mu")+T(xt,y+30,"stálé zatížení g_{k} = Σ h·γ","t-b")+T(xg,y+30,F(R.gk,3),"t-b","end");
+ return svgOpen(W,y+42,"Skladba stropu a stálé zatížení")+pats(p)+s+"</svg>"}
+
+/* ---------- výztuž: příčný řez a půdorys ---------- */
+function rebarXFig(R){const P=R.P,o=R.o,h=R.h,sp=o.s,ph=o.ph,c=o.c,d=o.d;
+ const nsp=sp<120?3:2,wmm=(nsp+1)*sp,W=360,x0=70,k=Math.min((W-x0-80)/wmm,150/h),Top=34,X=v=>x0+v*k,Y=v=>Top+v*k,x1=X(wmm),yb=Y(h);let s="";
+ s+=T(10,16,"PŘÍČNÝ ŘEZ KOLMO NA ROZPĚTÍ","t-h");
+ s+=`<path d="M${r1(x0)} ${Top}H${r1(x1)}${zz(x1,Top,yb,1)}H${r1(x0)}${zz(x0,yb,Top,-1)}Z" class="conc"/>`;
+ if(P.rz)s+=`<rect x="${r1(x0+2)}" y="${r1(Y(h-c-ph-P.pr))}" width="${r1(x1-x0-4)}" height="${r1(Math.max(2,P.pr*k))}" class="bar-r"/>`;
+ const rr=Math.max(2.4,ph/2*k),yd=Y(d),xs=[];for(let i=0;i<=nsp;i++){const cx=X(sp/2+i*sp);xs.push(cx);s+=`<circle cx="${r1(cx)}" cy="${r1(yd)}" r="${r1(rr)}" class="bar"/>`}
+ s+=dimV(x0-18,Y(0),yb,`h = ${Fn(h)}`,"l")+dimV(x1+20,Y(0),yd,`d = ${F(d,0)}`)+dimV(x1+20,Y(h-c),yb,`c = ${F(c,0)}`);
+ s+=dimH(xs[0],xs[1],yb+24,`s = ${sp}`,{ext:[yb+24-yd,4]})+dimH(xs[1]+rr,xs[2]-rr,yb+52,`s_{u} = ${F(sp-ph,0)}`,{ext:[yb+52-yd,4]});
+ s+=T(x0,yb+80,`hlavní Ø${ph} po ${sp} mm, A_{s} = ${F(o.As,0)} mm²/m`,"t-th t-b");
+ if(P.rz)s+=T(x0,yb+98,`rozdělovací Ø${P.pr} po ${R.sr} mm (na hlavní)`,"t-mu");
+ return svgOpen(W,yb+(P.rz?108:90),"Příčný řez deskou s výztuží")+s+"</svg>"}
+function planFig(R){const P=R.P,o=R.o,sp=o.s,S=PFX==="rp"?170:220,x0=58,y0=56,W=360,k=S/1000;let s="";
+ s+=T(x0,14,"PŮDORYS VÝZTUŽE, VÝŘEZ 1 × 1 m","t-h");
+ s+=arrow(x0+S/2,42,x0,42,"a-ac",8)+arrow(x0+S/2,42,x0+S,42,"a-ac",8)+T(x0+S/2,35,"směr rozpětí l_{eff}","t-ac","middle");
+ s+=`<rect x="${x0}" y="${y0}" width="${S}" height="${S}" class="plan"/>`;
+ const ys=[];for(let v=sp/2;v<1000;v+=sp)ys.push(y0+v*k);const wm=Math.max(1.8,o.ph*k);
+ ys.forEach(y=>s+=`<line x1="${x0-6}" y1="${r1(y)}" x2="${x0+S+6}" y2="${r1(y)}" class="rb-main" stroke-width="${r1(wm)}"/>`);
+ let yc=y0+S+30;
+ if(P.rz){const xr=[];for(let v=R.sr/2;v<1000;v+=R.sr)xr.push(x0+v*k);const wr=Math.max(1.2,P.pr*k);
+  xr.forEach(x=>s+=`<line x1="${r1(x)}" y1="${y0-6}" x2="${r1(x)}" y2="${y0+S+6}" class="rb-dist" stroke-width="${r1(wr)}"/>`);
+  if(xr.length>1)s+=dimH(xr[0],xr[1],y0+S+26,`s_{r} = ${R.sr}`,{ext:[20,4]});yc=y0+S+52}
+ if(ys.length>1)s+=dimV(x0+S+22,ys[0],ys[1],`s = ${sp}`);
+ s+=dimV(x0-22,y0,y0+S,"1 000","l");
+ s+=T(x0,yc,`hlavní Ø${o.ph} po ${sp} mm, ${F(1000/sp,1)} prutu na 1 m`,"t-th t-b");
+ if(P.rz)s+=T(x0,yc+17,`rozdělovací Ø${P.pr} po ${R.sr} mm, ${F(1000/R.sr,1)} prutu na 1 m`,"t-b");
+ return svgOpen(W,yc+(P.rz?28:12),"Půdorys výztuže na 1 m × 1 m")+s+"</svg>"}
+
+/* ---------- smyk u podpory ---------- */
+function shearFig(R){const P=R.P,o=R.o,p=PFX+"s",h=R.h,dm=o.d/1000,t1=P.t1,a1=R.a1;
+ const W=640,x0=40,rest=0.55,k=(W-x0-150)/(t1+dm+rest),X=m=>x0+(m+t1)*k;
+ const Hs=Math.max(40,Math.min(84,h/1000*k)),ky=Hs/h,yCh=24,yL=40,yS=76,yB=yS+Hs,yW=yB+54,xe=X(dm+rest);let s="";
+ s+=`<rect x="${r1(X(-t1))}" y="${yL}" width="${r1(xe-X(-t1))}" height="8" class="band"/>`;
+ for(let x=X(-t1)+8;x<xe-4;x+=34)s+=arrow(x,yL+8,x,yS-3,"a-ink",6);
+ s+=T(xe+10,yL+8,`f_{d} = ${F(R.fd,2)} kN/m²`,"t-b");
+ s+=`<rect x="${r1(X(-t1))}" y="${r1(yB)}" width="${r1(t1*k)}" height="${r1(yW-yB)}" fill="url(#${p}-hw)" class="wall"/>`;
+ s+=`<path d="M${r1(X(-t1))} ${yS}H${r1(xe)}${zz(xe,yS,yB,1)}H${r1(X(-t1))}Z" class="conc"/>`;
+ s+=line(X(-t1)+5,yS+o.d*ky,xe-4,yS+o.d*ky,"rebar");
+ const xa=X(-a1),xf=X(0),xd=X(dm);
+ s+=line(xa,yCh-10,xa,yW+6,"axis")+`<circle cx="${r1(xa)}" cy="${r1(yB)}" r="3.5" class="dot"/>`+T(xa,yW+20,"osa uložení","t-mu","middle");
+ s+=line(xd,yS-10,xd,yB+24,"cut")+T(xd+6,yB+20,"kritický řez","t-th");
+ s+=arrow(xd+14,yS+6,xd+14,yB-6,"a-th",9)+T(xd+24,(yS+yB)/2+4,`V_{Ed1} = ${F(R.VE1,2)} kN/m`,"t-th t-b");
+ s+=chainH([xa,xf,xd],[`a_{1} = ${Fi(a1*1000)}`,`d = ${F(o.d,0)}`],yCh,{ext:[4,yS-yCh-2]});
+ s+=T(xf+4,yW-6,"líc podpory","t-mu");
+ const rows=[["τ_{Ed}",R.tE,"f-ac","t-ac"],["τ_{Rdc,min}",R.tmin,"f-ok","t-ok"]];if(R.tE>R.tmin)rows.push(["τ_{Rdc}",R.tRc,"f-ok","t-ok"]);
+ const gx=x0+96,gw=W-gx-130,mx=Math.max(...rows.map(r=>r[1]));let gy=yW+46;
+ s+=T(x0,gy-10,"SMYKOVÉ NAPĚTÍ [MPa]","t-h");
+ rows.forEach(r=>{const w=Math.max(2,gw*r[1]/mx);s+=T(gx-10,gy+11,r[0],"","end")+`<rect x="${gx}" y="${gy}" width="${r1(w)}" height="14" class="${r[2]}"/>`+T(gx+w+8,gy+11,F(r[1],3)+" MPa",r[3]+" t-b");gy+=24});
+ return svgOpen(W,gy+4,"Posudek na smyk: kritický řez ve vzdálenosti d od líce podpory")+pats(p)+s+"</svg>"}
+
+/* ---------- schéma nosníku s kótou M_max ---------- */
+function beamFig(R){const X0=70,X1=590,Y=96,Xm=(X0+X1)/2;let s=svgOpen(660,212,"Statické schéma prostého nosníku, poloha maximálního momentu okótována");
+ s+=`<rect x="${X0}" y="42" width="${X1-X0}" height="12" class="band"/>`;
+ for(let i=0;i<=13;i++){const x=X0+(X1-X0)*i/13;s+=arrow(x,54,x,Y-3,"a-ink",7)}
+ s+=T(Xm,33,`f_{d} = ${F(R.fd)} kN/m`,"t-b","middle");
+ s+=line(X0,Y,X1,Y,"beam");
+ const pin=x=>`<path d="M${x} ${Y+2}L${x-11} ${Y+20}L${x+11} ${Y+20}Z" class="sup"/>`+line(x-17,Y+20,x+17,Y+20,"ln")+[0,1,2,3,4,5].map(i=>line(x-15+i*6,Y+20,x-19+i*6,Y+26,"ln-mu")).join("");
+ const rol=x=>`<path d="M${x} ${Y+2}L${x-11} ${Y+18}L${x+11} ${Y+18}Z" class="sup"/>`+line(x-17,Y+23,x+17,Y+23,"ln")+[0,1,2,3,4,5].map(i=>line(x-15+i*6,Y+23,x-19+i*6,Y+29,"ln-mu")).join("");
+ s+=pin(X0)+rol(X1);
+ s+=T(X0,Y+46,`R_{A} = ${F(R.V)} kN`,"t-mu","middle")+T(X1,Y+46,`R_{B} = ${F(R.V)} kN`,"t-mu","middle");
+ s+=line(Xm,Y,Xm,Y+70,"ln-mu dash")+`<circle cx="${Xm}" cy="${Y}" r="5" class="dot"/>`;
+ s+=T(Xm+10,Y+20,`M_{max} = M_{Ed} = ${F(R.M)} kNm/m`,"t-ac t-b");
+ s+=dimH(X0,Xm,Y+70,`x = l_{eff}/2 = ${F(R.le/2,3)} m`);
+ s+=dimH(X0,X1,Y+100,`l_{eff} = ${F(R.le,3)} m`);
+ return s+"</svg>"}
+
+/* ---------- průběhy M a V jako výkres (pro PDF) ---------- */
+function mvFig(R){const W=700,x0=76,x1=636,Lf=R.le,X=x=>x0+(x1-x0)*x/Lf,fd=R.fd,ok=okSec(R);let s="";
+ const yb=26;s+=line(x0,yb,x1,yb,"beam")+[x0,x1].map(x=>`<path d="M${x} ${yb+2}L${x-8} ${yb+15}L${x+8} ${yb+15}Z" class="sup"/>`).join("");
+ const yM=62,hM=66,kM=hM/Math.max(R.M,ok?R.MRd:0),pts=[[x0,yM]];for(let i=0;i<=60;i++){const x=Lf*i/60;pts.push([X(x),yM+fd*x*(Lf-x)/2*kM])}pts.push([x1,yM]);
+ s+=T(x0-12,yM+4,"M [kNm/m]","t-b","end")+poly(pts,"f-ac")+line(x0,yM,x1,yM,"ln");
+ if(ok){const yr=yM+R.MRd*kM;s+=line(x0,yr,x1,yr,"ln-ok")+T(x1-6,yr-6,`M_{Rd} = ${F(R.MRd,2)} (únosnost)`,"t-ok","end")}
+ const xm=X(Lf/2);s+=line(xm,yM,xm,yM+hM+26,"ln-mu dash")+`<circle cx="${r1(xm)}" cy="${r1(yM+R.M*kM)}" r="4" class="dot"/>`+T(xm,yM+R.M*kM*0.55,`M_{Ed} = ${F(R.M,2)}`,"t-ac t-b","middle");
+ s+=dimH(x0,xm,yM+hM+22,`l_{eff}/2 = ${F(Lf/2,3)} m`,{ext:[6,4]});
+ const yV=yM+hM+80,hV=36,kV=hV/R.V;
+ s+=T(x0-12,yV+4,"V [kN/m]","t-b","end")+poly([[x0,yV],[x0,yV-R.V*kV],[xm,yV]],"f-ac")+poly([[xm,yV],[x1,yV+R.V*kV],[x1,yV]],"f-ac")+line(x0,yV,x1,yV,"ln");
+ s+=T(x0-6,yV-hV+4,F(R.V,2),"t-ac t-b","end")+T(x1+6,yV+hV+4,"−"+F(R.V,2),"t-ac t-b");
+ if(ok){const xv=X(R.a1+R.o.d/1000),yv=yV-R.VE1*kV;s+=line(xv,yV,xv,yv,"ln-mu dash")+`<circle cx="${r1(xv)}" cy="${r1(yv)}" r="3.5" class="dot-th"/>`+T(xv+8,yv-4,`V_{Ed1} = ${F(R.VE1,2)} (řez d od líce)`,"t-th")}
+ return svgOpen(W,yV+hV+20,"Průběh ohybového momentu a posouvající síly")+s+"</svg>"}
+
+/* ---------- grafy M(x), V(x) – Chart.js ---------- */
+const marks={id:"marks",afterDatasetsDraw(ch,args,opt){const items=opt.items||[];const{ctx,scales:{x,y}}=ch;ctx.save();
+ items.forEach(m=>{const px=x.getPixelForValue(m.x),py=y.getPixelForValue(m.y);
+  if(m.line){const p0=y.getPixelForValue(0);ctx.setLineDash([5,4]);ctx.strokeStyle=opt.mu;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(px,p0);ctx.lineTo(px,py);ctx.stroke();ctx.setLineDash([])}
+  if(m.dot!==false){ctx.beginPath();ctx.arc(px,py,4.5,0,Math.PI*2);ctx.fillStyle=m.color||opt.color;ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=opt.surface;ctx.stroke()}
+  ctx.textAlign=m.align||"center";ctx.textBaseline=m.base||"bottom";const tx=px+(m.dx||0),ty=py+(m.dy||0);
+  ctx.fillStyle=m.tc||opt.ink;ctx.font=(m.w||"600")+' 12px "IBM Plex Sans",system-ui,sans-serif';ctx.fillText(m.text,tx,ty);
+  if(m.text2){ctx.fillStyle=opt.mu;ctx.font='12px "IBM Plex Sans",system-ui,sans-serif';ctx.fillText(m.text2,tx,ty+(m.base==="top"?16:-16))}});
+ ctx.restore()}};
+let mChart=null,vChart=null,CH_FOR=null;
+function tok(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function drawCharts(R){if(mChart){mChart.destroy();mChart=null}if(vChart){vChart.destroy();vChart=null}
+ if(typeof Chart==="undefined"){$("chartMsg").textContent="Knihovna pro grafy (Chart.js) se nenačetla. Zkontrolujte připojení a načtěte stránku znovu; výpočet i ostatní diagramy fungují dál.";return}
+ $("chartMsg").textContent="";
+ try{const ac=tok("--ac"),ink=tok("--ink"),mu=tok("--mu"),pn=tok("--pn"),grid=tok("--grid"),fill=tok("--ac-f"),okc=tok("--ok"),tah=tok("--tah"),ok=okSec(R);
+ Chart.defaults.font.family='"IBM Plex Sans",system-ui,sans-serif';
+ const l=R.le,n=80,Mp=[],Vp=[];for(let i=0;i<=n;i++){const xx=l*i/n;Mp.push({x:xx,y:R.fd*xx*(l-xx)/2});Vp.push({x:xx,y:R.fd*(l/2-xx)})}
+ const base=(yt,unit,sym)=>({responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:"index",intersect:false},layout:{padding:{top:26,right:14,left:4,bottom:4}},
+  plugins:{legend:{display:false},title:{display:true,text:yt,color:ink,align:"start",font:{size:14,weight:600}},
+   tooltip:{filter:it=>it.datasetIndex===0,callbacks:{title:it=>`x = ${F(it[0].parsed.x,2)} m`,label:c=>`${sym} = ${F(c.parsed.y,2)} ${unit}`}},marks:{color:ac,ink,mu,surface:pn,items:[]}},
+  scales:{x:{type:"linear",min:0,max:l,ticks:{color:mu,maxTicksLimit:7,callback:v=>F(v,2)},grid:{color:grid},title:{display:true,text:"x (m)",color:mu}},
+   y:{ticks:{color:mu,maxTicksLimit:6,callback:v=>F(v,0)},grid:{color:c=>c.tick.value===0?mu:grid},title:{display:true,text:unit,color:mu}}}});
+ const ds=d=>({data:d,borderColor:ac,backgroundColor:fill,fill:"origin",pointRadius:0,pointHoverRadius:4,borderWidth:2,tension:0});
+ const hl=(yv,col,dash)=>({data:[{x:0,y:yv},{x:l,y:yv}],borderColor:col,borderDash:dash,borderWidth:1.5,pointRadius:0,pointHoverRadius:0,fill:false});
+ const mo=base("Ohybový moment M(x)","kNm/m","M");mo.scales.y.reverse=true;mo.scales.y.min=0;mo.scales.y.max=Math.ceil(Math.max(R.M,ok?R.MRd:0)*1.3);
+ mo.plugins.marks.items=[{x:l/2,y:R.M,line:true,text:`max M = ${F(R.M)} kNm/m`,text2:`x = leff/2 = ${F(l/2,3)} m`,base:"bottom",dy:-10}];
+ const mds=[ds(Mp)];if(ok){mds.push(hl(R.MRd,okc,[7,4]),hl(R.o.Mcr,mu,[3,3]));mo.plugins.marks.items.push({x:0,y:R.MRd,dot:false,text:`MRd = ${F(R.MRd)} (únosnost)`,tc:okc,align:"left",dx:6,base:"top",dy:4},{x:l,y:R.o.Mcr,dot:false,text:`Mcr = ${F(R.o.Mcr)}`,tc:mu,w:"400",align:"right",dx:-6,base:"bottom",dy:-4})}
+ const vo=base("Posouvající síla V(x)","kN/m","V");const vl=Math.ceil(Math.max(R.V,ok?R.VRd:0)*1.2);vo.scales.y.min=-vl;vo.scales.y.max=vl;
+ vo.plugins.marks.items=[{x:0,y:R.V,text:`VEd = ${F(R.V)} kN`,align:"left",dx:8,base:"bottom",dy:-6},{x:l,y:-R.V,text:`−${F(R.V)} kN`,align:"right",dx:-8,base:"top",dy:8}];
+ const vds=[ds(Vp)];if(ok){const xv=R.a1+R.o.d/1000;vds.push(hl(R.VRd,okc,[7,4]),hl(-R.VRd,okc,[7,4]));vo.plugins.marks.items.push({x:xv,y:R.VE1,line:true,color:tah,text:`VEd1 = ${F(R.VE1)}`,tc:tah,align:"left",dx:8,base:"top",dy:4},{x:l,y:R.VRd,dot:false,text:`VRd = ${F(R.VRd,1)} (únosnost)`,tc:okc,align:"right",dx:-6,base:"bottom",dy:-4})}vo.plugins.marks.items.push({x:l/2,y:0,text:"V = 0 → max M",base:"bottom",dy:-8});
+ mChart=new Chart($("mCanvas"),{type:"line",data:{datasets:mds},options:mo,plugins:[marks]});
+ vChart=new Chart($("vCanvas"),{type:"line",data:{datasets:vds},options:vo,plugins:[marks]});
+ }catch(e){console.error(e);$("chartMsg").textContent="Graf se nepodařilo vykreslit; výpočet a ostatní diagramy platí."}}
+function ensureCharts(){if(CUR&&$("f_vs").open&&CH_FOR!==CUR){drawCharts(CUR);CH_FOR=CUR}}
+
+/* ---------- řez: přetvoření + síly ---------- */
+function sectionFig(R){const h=R.h,o=R.o,d=o.d,xu=R.xu,Top=46,HP=PFX==="rp"?160:210,ky=HP/h,Y=v=>Top+v*ky,W=930,H=Top+HP+44;
+ let s=svgOpen(W,H,`Řez deskou: přetvoření, blok napětí a síly Fc = Fs = ${F(R.Fs,1)} kN`);
+ const sx0=90,sx1=240,x0=410,xc=700,bw=64;
+ s+=T((sx0+sx1)/2,18,"PRŮŘEZ (b = 1 m)","t-h","middle")+T(x0,18,"PŘETVOŘENÍ ε (‰)","t-h","middle")+T(xc+40,18,"NAPĚTÍ A VNITŘNÍ SÍLY","t-h","middle");
+ s+=`<rect x="${sx0}" y="${Top}" width="${sx1-sx0}" height="${HP}" class="conc"/>`;
+ const sp=(sx1-sx0)*o.s/1000,rr=Math.max(3,Math.min(6.5,o.ph*.45));for(let xx=sx0+sp/2;xx<sx1-1;xx+=sp)s+=`<circle cx="${r1(xx)}" cy="${r1(Y(d))}" r="${rr}" class="bar"/>`;
+ s+=T((sx0+sx1)/2,Y(h)+22,`Ø${o.ph} po ${o.s} mm`,"t-mu","middle");
+ s+=dimV(72,Y(0),Y(h),`h = ${F(h,0)}`,"l")+dimV(252,Y(0),Y(d),`d = ${F(d,0)}`)+dimV(252,Y(h-o.c),Y(h),`c = ${F(o.c,0)}`);
+ s+=line(sx0-6,Y(xu),W-44,Y(xu),"ln-mu dash")+T(W-8,Y(xu)+4,"n. o.","t-mu","end");
+ const k=Math.min(70/3.5,95/Math.max(R.es,.1));
+ s+=line(x0,Y(0)-6,x0,Y(h)+6,"ln");
+ s+=poly([[x0,Y(0)],[x0-3.5*k,Y(0)],[x0,Y(xu)]],"f-tl")+poly([[x0,Y(xu)],[x0+R.es*k,Y(d)],[x0,Y(d)]],"f-th");
+ s+=line(x0-3.5*k,Y(0),x0+R.es*k,Y(d),"ln");
+ s+=T(x0-3.5*k-6,Y(0)+4,`ε_{cu} = −3,5`,"t-tl t-b","end");
+ s+=T(x0+R.es*k+6,Y(d)+4,`ε_{s} = ${F(R.es,1)}`,"t-th t-b");
+ const xy=x0+R.eyd*k;s+=line(xy,Y(xu),xy,Y(h)+4,"ln-mu dash")+T(xy,Y(h)+18,`ε_{yd} = ${F(R.eyd,2)}`,"t-mu","middle");
+ s+=dimV(x0+10,Y(0),Y(xu),`x_{u} = ${F(xu,1)} mm`);
+ const yc=Y(0.4*xu),yd=Y(d),al=100;
+ s+=`<rect x="${xc-bw}" y="${Y(0)}" width="${bw}" height="${r1(0.8*xu*ky)}" class="f-tl"/>`;
+ s+=T(xc-bw-8,Y(0)+10,`f_{cd} = ${F(R.fcd,1)} MPa`,"t-tl","end");
+ s+=T(xc-bw/2,Y(0.8*xu)+32,`0,8·x_{u} = ${F(0.8*xu,1)} mm`,"t-mu","middle");
+ s+=arrow(xc+al,yc,xc+4,yc,"a-tl",11)+T(xc+al/2+2,yc-8,`F_{c} = ${F(R.Fc,1)} kN`,"t-tl t-b","middle");
+ s+=line(xc-bw,yd,xc,yd,"ln-mu dash")+`<circle cx="${xc-bw/2}" cy="${r1(yd)}" r="4.5" class="dot-th"/>`;
+ s+=arrow(xc+4,yd,xc+al,yd,"a-th",11)+T(xc+al/2+2,yd-8,`F_{s} = ${F(R.Fs,1)} kN`,"t-th t-b","middle");
+ s+=T(xc+al/2+2,yd+18,`σ_{s} = f_{yd} = ${F(R.fyd,1)} MPa`,"t-mu","middle");
+ s+=dimV(xc+al+18,yc,yd,`z_{c} = ${F(R.zc,1)} mm`);
+ s+=T(xc+al/2+2,yd+38,`M_{Rd} = F_{s}·z_{c} = ${F(R.MRd,2)} kNm`,"t-ac t-b","middle");
+ return s+"</svg>"}
+
+/* ---------- napětí σx a τ (stav I, II, MSÚ) ---------- */
+let MODE="I";
+const MODE_N={I:"stav I – bez trhlin",II:"stav II – s trhlinou",U:"MSÚ – návrhový blok"};
+function secSketch(R,Y,h,d,yNA,shear){const sx0=40,sx1=150,xc=95;let s=`<rect x="${sx0}" y="${Y(0)}" width="${sx1-sx0}" height="${r1(Y(h)-Y(0))}" class="conc"/>`;
+ for(let i=0;i<4;i++)s+=`<circle cx="${sx0+(i+.5)*(sx1-sx0)/4}" cy="${r1(Y(d))}" r="4" class="bar"/>`;
+ if(shear){for(let i=0;i<5;i++){const y=Y(h*(0.08+i*0.2));s+=arrow(xc,y,xc,y+Math.min(22,(Y(h)-Y(0))*.12),"a-ac",7)}}
+ else{s+=arrow(sx1+14,yNA,sx0-26,yNA,"a-ink",8)+T(sx0-24,yNA+16,"y","t-b");s+=arrow(xc,yNA,xc,Y(h)+30,"a-ink",8)+T(xc+8,Y(h)+30,"z","t-b")}
+ return s}
+function hatchLines(Y,ky,y0,y1,fx,x0,cls,step=5){let s="";for(let yy=Y(y0)+step/2;yy<Y(y1);yy+=step){const mm=(yy-Y(0))/ky,x=fx(mm);if(Math.abs(x-x0)>.8)s+=line(x0,yy,x,yy,cls)}return s}
+function sigFig(R,S){const h=R.h,d=R.o.d,Top=40,HP=200,ky=HP/h,Y=v=>Top+v*ky,x0=350,W=560,H=Top+HP+44;
+ let s=svgOpen(W,H,"Průběh normálového napětí σx po výšce průřezu");
+ s+=T(x0-150,20,"σ_{x} [MPa]","t-b");
+ const U=MODE==="U",sg=MODE==="II"?S.II:S.I,xNA=U?R.xu:sg.x;
+ s+=secSketch(R,Y,h,d,Y(xNA),false);
+ s+=line(x0,Y(0)-8,x0,Y(h)+8,"ln");
+ s+=line(135,Y(xNA),x0+150,Y(xNA),"ln-mu dash")+T(x0+156,Y(xNA)+4,"n. o.","t-mu");
+ const sLab=(v,extra)=>T(x0+8,Y(d)+4,`σ_{s} = ${extra}+${F(v,1)} MPa`,"t-th t-b")+T(x0+8,Y(d)+19,MODE==="I"?"výztuž (α_{e}·σ_{c})":"výztuž, mimo měřítko","t-mu");
+ if(MODE==="I"){const k=140/Math.max(Math.abs(sg.top),Math.abs(sg.bot),R.fctm),px=v=>x0-v*k;
+  s+=hatchLines(Y,ky,0,h,mm=>px(sg.sig(mm)),x0,"h-tl");
+  s+=poly([[x0,Y(0)],[px(sg.top),Y(0)],[x0,Y(sg.x)]],"f-tl")+poly([[x0,Y(sg.x)],[px(sg.bot),Y(h)],[x0,Y(h)]],"f-th");
+  s+=T(px(sg.top)+6,Y(0)+4,F(sg.top,2),"t-tl t-b")+T(px(sg.bot)-6,Y(h)+4,"+"+F(sg.bot,2),"t-th t-b","end");
+  const xf=px(R.fctm);s+=line(xf,Y(sg.x),xf,Y(h)+6,"ln-mu dash")+T(xf,Y(h)+22,`f_{ctm} = ${F(R.fctm,1)}`,sg.bot>R.fctm?"t-bad":"t-mu","middle");
+  s+=`<circle cx="${r1(px(sg.atD))}" cy="${r1(Y(d))}" r="4" class="dot-th"/>`+sLab(sg.ss,"");
+  s+=T(x0-8,Y(sg.x)-6,`x = ${F(sg.x,1)} mm`,"t-mu","end");}
+ else if(MODE==="II"){const k=140/Math.abs(sg.top),px=v=>x0-v*k;
+  s+=hatchLines(Y,ky,0,sg.x,mm=>px(sg.sig(mm)),x0,"h-tl");
+  s+=poly([[x0,Y(0)],[px(sg.top),Y(0)],[x0,Y(sg.x)]],"f-tl");
+  s+=T(px(sg.top)+6,Y(0)+4,F(sg.top,2),"t-tl t-b");
+  s+=T(x0-8,(Y(sg.x)+Y(d))/2,"beton v tahu","t-mu","end")+T(x0-8,(Y(sg.x)+Y(d))/2+15,"nepůsobí (trhliny)","t-mu","end");
+  s+=arrow(x0,Y(d),x0-46,Y(d),"a-th",9)+sLab(sg.ss,"");
+  s+=T(x0-8,Y(sg.x)-6,`x = ${F(sg.x,1)} mm`,"t-mu","end");}
+ else{const k=140/R.fcd,px=v=>x0-v*k;
+  s+=hatchLines(Y,ky,0,0.8*R.xu,()=>px(-R.fcd),x0,"h-tl",4);
+  s+=`<rect x="${x0}" y="${Y(0)}" width="${r1(R.fcd*k)}" height="${r1(0.8*R.xu*ky)}" class="f-tl"/>`;
+  s+=T(px(-R.fcd)+6,Y(0)+4,`−f_{cd} = −${F(R.fcd,1)}`,"t-tl t-b");
+  s+=T(x0+8,Y(0.8*R.xu)+16,`0,8·x_{u} = ${F(0.8*R.xu,1)} mm`,"t-mu");
+  s+=arrow(x0,Y(d),x0-46,Y(d),"a-th",9)+sLab(R.fyd,"f_{yd} = ");
+  s+=T(x0-8,Y(R.xu)-6,`x_{u} = ${F(R.xu,1)} mm`,"t-mu","end");}
+ const lab=MODE==="U"?`M_{Ed} = ${F(R.M)} kNm/m`:`M = ${F(S.M)} kNm/m`;s+=T(W-8,20,lab,"t-mu","end");
+ return s+"</svg>"}
+function tauFig(R,S){const h=R.h,d=R.o.d,Top=40,HP=200,ky=HP/h,Y=v=>Top+v*ky,x0=210,W=560,H=Top+HP+44;
+ let s=svgOpen(W,H,"Průběh smykového napětí τ po výšce průřezu");
+ s+=T(x0,20,"τ [MPa]","t-b");
+ s+=secSketch(R,Y,h,d,0,true)+T(95,Y(h)+22,"směr smykového toku","t-mu","middle");
+ s+=line(x0,Y(0)-8,x0,Y(h)+8,"ln");
+ if(MODE==="U"){const k=190/Math.max(R.tE,R.tmin),px=v=>x0+v*k,y1=0.1*d;
+  s+=hatchLines(Y,ky,y1,d,()=>px(R.tE),x0,"h-ac",4);
+  s+=`<rect x="${x0}" y="${r1(Y(y1))}" width="${r1(R.tE*k)}" height="${r1((d-y1)*ky)}" class="f-ac"/>`;
+  s+=T(px(R.tE)+6,(Y(y1)+Y(d))/2,`τ_{Ed} = ${F(R.tE,3)}`,"t-ac t-b")+T(px(R.tE)+6,(Y(y1)+Y(d))/2+16,"na z = 0,9d","t-mu");
+  const xt=px(R.tmin);s+=line(xt,Y(0)-4,xt,Y(h)+6,"ln-mu dash")+T(xt,Y(h)+22,`τ_{Rdc,min} = ${F(R.tmin,3)}`,"t-mu","end");
+  s+=T(W-8,20,`V_{Ed1} = ${F(R.VE1)} kN/m (řez d od líce)`,"t-mu","end");}
+ else{const sg=MODE==="II"?S.II:S.I;let mx=0;const pts=[[x0,Y(0)]];for(let i=0;i<=120;i++){const y=h*i/120,t=sg.tau(y);mx=Math.max(mx,t)}
+  const k=190/mx,px=v=>x0+v*k;
+  if(MODE==="II"){pts.length=0;pts.push([x0,Y(0)]);for(let i=0;i<=60;i++){const y=sg.x*i/60;pts.push([px(sg.tau(y)),Y(y)])}pts.push([px(sg.tmax),Y(d)],[x0,Y(d)])}
+  else{for(let i=0;i<=120;i++){const y=h*i/120;pts.push([px(sg.tau(y)),Y(y)])}pts.push([x0,Y(h)])}
+  s+=hatchLines(Y,ky,0,MODE==="II"?d:h,mm=>px(sg.tau(mm)),x0,"h-ac");
+  s+=poly(pts,"f-ac");
+  s+=line(x0-10,Y(sg.x),px(sg.tmax)+10,Y(sg.x),"ln-mu dash");
+  if(MODE==="I")s+=T(px(sg.tmax)+8,Y(sg.x)+4,`τ_{max} = ${F(sg.tmax,3)}`,"t-ac t-b")+T(px(sg.tmax)+8,Y(sg.x)+20,"v neutrální ose","t-mu");
+  else s+=T(px(sg.tmax)+8,(Y(sg.x)+Y(d))/2,`τ = V/(b·z) = ${F(sg.tmax,3)}`,"t-ac t-b")+T(px(sg.tmax)+8,(Y(sg.x)+Y(d))/2+16,`z = d − x/3 = ${F(sg.z,1)} mm`,"t-mu");
+  s+=T(W-8,20,`V = ${F(S.V)} kN/m (u podpory)`,"t-mu","end");}
+ return s+"</svg>"}
+function stressParts(R){const level=$("st_load").value,S=SD.stages(R,level);let v="",note="";
+ if(MODE==="I"){const t=S.I;v=rw(L("α<sub>e</sub> = E<sub>s</sub>/E<sub>cm</sub>","ae"),F(S.ae,2))+rw("Neutrální osa ideálního průřezu x<sub>I</sub>",F(t.x,1)+" mm")+rw("I<sub>I</sub>",F(t.I/1e6,1)+"·10<sup>6</sup> mm⁴")+rw("σ<sub>c</sub> horní líc",F(t.top,2)+" MPa")+rw("σ<sub>c</sub> dolní líc",(t.bot>0?"+":"")+F(t.bot,2)+" MPa")+rw("σ<sub>s</sub> výztuž",(t.ss>0?"+":"")+F(t.ss,1)+" MPa")+rw("τ<sub>max</sub> v neutrální ose",F(t.tmax,3)+" MPa");
+  note=t.bot>R.fctm?`Tahové napětí na dolním líci ${F(t.bot,2)} MPa překračuje f_ctm = ${F(R.fctm,1)} MPa, beton při tomto momentu praská a skutečnému stavu odpovídá stav II.`:`Tahové napětí na dolním líci ${F(t.bot,2)} MPa je pod f_ctm = ${F(R.fctm,1)} MPa, průřez zůstává bez trhlin.`;}
+ else if(MODE==="II"){const t=S.II;v=rw(L("α<sub>e</sub> = E<sub>s</sub>/E<sub>cm</sub>","ae"),F(S.ae,2))+rw("Výška tlačené oblasti x<sub>II</sub>",F(t.x,1)+" mm")+rw("I<sub>II</sub>",F(t.I/1e6,1)+"·10<sup>6</sup> mm⁴")+rw("Rameno z = d − x/3",F(t.z,1)+" mm")+rw("σ<sub>c</sub> horní líc",F(t.top,2)+" MPa")+rw("σ<sub>s</sub> výztuž","+"+F(t.ss,1)+" MPa")+rw("τ = V/(b·z) pod neutrální osou",F(t.tmax,3)+" MPa");
+  note=t.ss>R.fyd?`Napětí ve výztuži ${F(t.ss,1)} MPa přesahuje f_yd = ${F(R.fyd,1)} MPa, pružný výpočet při tomto zatížení už neplatí (ocel teče).`:`Napětí ve výztuži ${F(t.ss,1)} MPa je pod f_yd = ${F(R.fyd,1)} MPa (využití ${F(t.ss/R.fyd*100,0)} %).`;}
+ else{v=rw("x<sub>u</sub> ; 0,8·x<sub>u</sub>",F(R.xu,1)+" ; "+F(0.8*R.xu,1)+" mm")+rw("σ<sub>c</sub> v bloku = −f<sub>cd</sub>",F(-R.fcd,1)+" MPa")+rw("σ<sub>s</sub> = f<sub>yd</sub>","+"+F(R.fyd,1)+" MPa")+rw("F<sub>c</sub> = F<sub>s</sub>",F(R.Fs,1)+" kN/m")+rw("τ<sub>Ed</sub> = V<sub>Ed1</sub>/(0,9·d·b)",F(R.tE,3)+" MPa")+rw("τ<sub>Rdc,min</sub>",F(R.tmin,3)+" MPa");
+  note="V MSÚ se tlak v betonu nahrazuje obdélníkovým blokem f_cd na výšce 0,8·x_u a smyk se posuzuje průměrným napětím na rameni z = 0,9d.";}
+ return{sig:sigFig(R,S),tau:tauFig(R,S),vals:v,note,level}}
+function renderStress(R){if(!okSec(R)){$("sigFig").innerHTML="";$("tauFig").innerHTML="";$("stVals").innerHTML="";$("stNote").textContent="Napětí nelze vykreslit, průřez nevyhovuje.";return}
+ $("st_load").disabled=MODE==="U";const S=stressParts(R);$("sigFig").innerHTML=S.sig;$("tauFig").innerHTML=S.tau;$("stVals").innerHTML=S.vals;$("stNote").textContent=S.note}
+document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>{MODE=b.dataset.mode;document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));if(CUR)renderStress(CUR)}));
+$("st_load").addEventListener("change",e=>{e.stopPropagation();if(CUR)renderStress(CUR)});
+
+/* ---------- podrobný výpočet po krocích ---------- */
+function stepsHTML(R){const P=R.P,o=R.o,gs=P.gs||25,fck=P.fck;
+ const E=(d,eq,res,ok)=>`<div class="st-row"><div class="st-d">${d}</div><div class="st-e">${eq}</div><div class="st-r">${res||(ok===undefined?"":ok?"vyhovuje":"nevyhovuje")}${ok===undefined?"":` <span class="${ok?"ok":"bad"}">${ok?"✓":"✗"}</span>`}</div></div>`;
+ const H=(n,t)=>`<h3 class="st-h"><span class="st-n">${n}</span>${t}</h3>`;
+ const Nt=t=>`<p class="st-note">${t}</p>`,m=v=>F(v,3),cls=clsName(fck);
+ let s="";
+ s+=H(1,"Geometrie a statické schéma");
+ s+=E("Světlé rozpětí","",`l<sub>n</sub> = ${F(P.ln,3)} m`);
+ s+=E("Návrh tloušťky desky",`h ≈ (1/25 až 1/20)·l<sub>n</sub> = ${F(P.ln*40,1)} až ${F(P.ln*50,1)} mm`,(R.auto?"":"zadáno ")+`h = ${F(R.h,0)} mm`);
+ if(R.auto)s+=Nt(R.h>R.lo?`Program začal na h = ${R.lo} mm (l<sub>n</sub>/25 zaokrouhleno nahoru na 10 mm) a zvětšoval ji po 10 mm, dokud deska nevyhověla ve všech posudcích.`:`Program zvolil h = l<sub>n</sub>/25 zaokrouhleno nahoru na 10 mm a deska při ní vyhověla.`);
+ const ec=P.lm==="ec2",t1=P.t1*1000,t2=P.t2*1000;
+ s+=E("Přesah za líc podpory 1",ec?`a<sub>1</sub> = min(h/2; t<sub>1</sub>/2) = min(${F(R.h/2,0)}; ${F(t1/2,0)})`:`a<sub>1</sub> = t<sub>1</sub>/2 = ${F(t1,0)}/2`,`a<sub>1</sub> = ${F(R.a1*1000,0)} mm`);
+ s+=E("Přesah za líc podpory 2",ec?`a<sub>2</sub> = min(h/2; t<sub>2</sub>/2) = min(${F(R.h/2,0)}; ${F(t2/2,0)})`:`a<sub>2</sub> = t<sub>2</sub>/2 = ${F(t2,0)}/2`,`a<sub>2</sub> = ${F(R.a2*1000,0)} mm`);
+ s+=E("Účinné rozpětí",`l<sub>eff</sub> = l<sub>n</sub> + a<sub>1</sub> + a<sub>2</sub> = ${m(P.ln)} + ${m(R.a1)} + ${m(R.a2)}`,`l<sub>eff</sub> = ${m(R.le)} m`);
+ s+=Nt("Statické schéma: prostý nosník o rozpětí l<sub>eff</sub>, počítá se pruh desky šířky b = 1 m.");
+ s+=H(2,"Zatížení");
+ s+=`<div class="wrap"><table class="st-t"><thead><tr><th>Stálé zatížení – vrstva</th><th>h (m)</th><th>b (m)</th><th>γ (kN/m³)</th><th>g (kN/m²)</th></tr></thead><tbody>${P.rows.map(r=>{const h=r.slab?R.h:r.h;return `<tr${r.slab?' class="sel"':""}><td>${esc(r.n)}</td><td>${F(h/1000,3)}</td><td>1</td><td>${F(r.r,1)}</td><td>${F(h/1000*r.r,3)}</td></tr>`}).join("")}</tbody><tfoot><tr><td colspan="4">g<sub>k</sub> = Σ h·b·γ</td><td>${F(R.gk,3)}</td></tr></tfoot></table></div>`;
+ s+=E("Proměnné (užitné) zatížení","ČSN EN 1991-1-1",`q<sub>k</sub> = ${F(P.qk,2)} kN/m²`);
+ s+=E("Návrhové zatížení (MSÚ)",`f<sub>d</sub> = γ<sub>G</sub>·g<sub>k</sub> + γ<sub>Q</sub>·q<sub>k</sub> = 1,35·${F(R.gk,3)} + 1,5·${F(P.qk,2)} = ${F(1.35*R.gk,3)} + ${F(1.5*P.qk,3)}`,`f<sub>d</sub> = ${F(R.fd,2)} kN/m²`);
+ s+=Nt(`γ<sub>G</sub> = 1,35 a γ<sub>Q</sub> = 1,5 pro třídu následků CC2 (k<sub>f</sub> = 1,0). Na pruh šířky b = 1 m tedy působí f<sub>d</sub> = ${F(R.fd,2)} kN/m.`);
+ s+=H(3,"Vnitřní síly");
+ s+=E("Maximální ohybový moment",`M<sub>Ed</sub> = ⅛·f<sub>d</sub>·l<sub>eff</sub>² = ⅛·${F(R.fd,2)}·${m(R.le)}²`,`M<sub>Ed</sub> = ${F(R.M,2)} kNm`);
+ s+=E("Poloha maxima momentu",`x = l<sub>eff</sub>/2 = ${m(R.le)}/2`,`x = ${m(R.le/2)} m`);
+ s+=E("Maximální posouvající síla (u podpor)",`V<sub>Ed</sub> = ½·f<sub>d</sub>·l<sub>eff</sub> = ½·${F(R.fd,2)}·${m(R.le)}`,`V<sub>Ed</sub> = ${F(R.V,2)} kN`);
+ s+=H(4,"Materiálové charakteristiky");
+ s+=E(`Beton ${cls}`,"EN 1992-1-1",`f<sub>ck</sub> = ${fck} MPa`);
+ s+=E("Součinitel efektivní pevnosti",`η<sub>cc</sub> = (40/f<sub>ck</sub>)<sup>1/3</sup> = (40/${fck})<sup>1/3</sup> = ${F(Math.cbrt(40/fck),3)}; nejvýše 1,0`,`η<sub>cc</sub> = ${F(R.eta,3)}`);
+ s+=E("Návrhová pevnost betonu v tlaku",`f<sub>cd</sub> = η<sub>cc</sub>·k<sub>tc</sub>·f<sub>ck</sub>/γ<sub>C</sub> = ${F(R.eta,3)}·${F(P.ktc,2)}·${fck}/1,5`,`f<sub>cd</sub> = ${F(R.fcd,2)} MPa`);
+ s+=E("Střední pevnost betonu v tahu","EN 1992-1-1",`f<sub>ctm</sub> = ${F(R.fctm,1)} MPa`);
+ s+=E("Modul pružnosti betonu",`E<sub>cm</sub> = 9500·(f<sub>ck</sub> + 8)<sup>1/3</sup> = 9500·${fck+8}<sup>1/3</sup>`,`E<sub>cm</sub> = ${F(R.Ecm/1000,1)} GPa`);
+ s+=E("Mezní přetvoření betonu","",`ε<sub>cu</sub> = 3,5 ‰`);
+ s+=E("Návrhová mez kluzu výztuže",`f<sub>yd</sub> = f<sub>yk</sub>/γ<sub>S</sub> = ${F(P.fyk,0)}/1,15`,`f<sub>yd</sub> = ${F(R.fyd,1)} MPa`);
+ s+=E("Přetvoření na mezi kluzu",`ε<sub>yd</sub> = f<sub>yd</sub>/E<sub>s</sub> = ${F(R.fyd,1)}/200 000`,`ε<sub>yd</sub> = ${F(R.eyd,2)} ‰`);
+ if(!okSec(R))return s+Nt(`<span class="bad">Průřez nevyhoví ani s nejmenší výztuží, tlačená oblast by přesáhla výšku průřezu. Zvětšete tloušťku nebo třídu betonu.</span>`);
+ s+=H(5,"Krycí vrstva a účinná výška");
+ s+=E("Minimální krytí",`c<sub>min</sub> = max(c<sub>min,dur</sub>; c<sub>min,b</sub> = Ø; 10 mm) = max(${F(P.cd,0)}; ${o.ph}; 10)`,`c<sub>min</sub> = ${F(o.c-10,0)} mm`);
+ s+=E("Nominální krytí",`c<sub>nom</sub> = c<sub>min</sub> + Δc<sub>dev</sub> = ${F(o.c-10,0)} + 10`,`c<sub>nom</sub> = ${F(o.c,0)} mm`);
+ s+=E("Účinná výška",`d = h − c<sub>nom</sub> − Ø/2 = ${F(R.h,0)} − ${F(o.c,0)} − ${o.ph}/2`,`d = ${F(o.d,1)} mm`);
+ const need=Math.max(o.Ar,o.Am),raw=1000*o.Af/need;
+ s+=H(6,"Návrh podélné výztuže");
+ s+=E("Nutná plocha výztuže",`A<sub>s,req</sub> = b·d·(f<sub>cd</sub>/f<sub>yd</sub>)·(1 − √(1 − 2M<sub>Ed</sub>/(b·d²·f<sub>cd</sub>))) = 1000·${F(o.d,1)}·(${F(R.fcd,2)}/${F(R.fyd,1)})·(1 − √(1 − 2·${F(R.M,2)}·10⁶/(1000·${F(o.d,1)}²·${F(R.fcd,2)})))`,`A<sub>s,req</sub> = ${F(o.Ar,0)} mm²/m`);
+ s+=E("Moment na mezi vzniku trhlin",`M<sub>cr</sub> = f<sub>ctm</sub>·b·h²/6 = ${F(R.fctm,1)}·1000·${F(R.h,0)}²/6`,`M<sub>cr</sub> = ${F(o.Mcr,2)} kNm`);
+ s+=E("Minimální plocha výztuže",`A<sub>s,min</sub> = b·d·(f<sub>ck</sub>/f<sub>yk</sub>)·(1 − √(1 − 2M<sub>cr</sub>/(b·d²·f<sub>ck</sub>))) = 1000·${F(o.d,1)}·(${fck}/${F(P.fyk,0)})·(1 − √(1 − 2·${F(o.Mcr,2)}·10⁶/(1000·${F(o.d,1)}²·${fck})))`,`A<sub>s,min</sub> = ${F(o.Am,0)} mm²/m`);
+ if(o.cands&&o.cands.length){s+=Nt("Výběr profilu: pro každý průměr se spočítá d, A<sub>s,req</sub> a rozteč zaokrouhlená dolů na násobek 25 mm. Rozteče pod 100 mm se vyřadí a zvolí se profil s nejmenší navrženou plochou výztuže.");
+  s+=`<div class="wrap"><table class="st-t"><thead><tr><th>Profil</th><th>d (mm)</th><th>A<sub>s,req</sub> (mm²/m)</th><th>s (mm)</th><th>A<sub>s</sub> (mm²/m)</th><th></th></tr></thead><tbody>${o.cands.map(k=>{const sel=k.ph===o.ph;return `<tr${sel?' class="sel"':""}><td>Ø${k.ph}</td><td>${F(k.d,1)}</td><td>${F(k.Ar,0)}</td><td>${k.s}</td><td>${F(k.As,0)}</td><td>${sel?"zvoleno":k.s<100?"rozteč pod 100 mm":""}</td></tr>`}).join("")}</tbody></table></div>`}
+ s+=E("Rozteč prutů",`s = A<sub>Ø</sub>·b / max(A<sub>s,req</sub>; A<sub>s,min</sub>) = ${F(o.Af,1)}·1000/${F(need,0)} = ${F(raw,1)} mm, zaokrouhleno dolů na násobek 25 mm, nejvýše s<sub>max</sub> = ${F(R.smax,0)} mm`,`s = ${o.s} mm`);
+ s+=E("Navržená výztuž",`A<sub>s</sub> = A<sub>Ø</sub>·b/s = ${F(o.Af,1)}·1000/${o.s}`,`<b>Ø${o.ph} po ${o.s} mm</b>, ${F(o.As,0)} mm²/m`);
+ if(P.rz){const Afr=SD.area(P.pr),rawr=1000*Afr/R.Asr;
+  s+=E("Rozdělovací výztuž",`A<sub>sr</sub> ≥ 0,2·A<sub>s</sub> = 0,2·${F(o.As,0)}`,`A<sub>sr</sub> ≥ ${F(R.Asr,0)} mm²/m`);
+  s+=E("Rozteč rozdělovací výztuže",`s<sub>r</sub> = A<sub>Ø${P.pr}</sub>·b/A<sub>sr</sub> = ${F(Afr,1)}·1000/${F(R.Asr,0)} = ${F(rawr,1)} mm, zaokrouhleno dolů na násobek 25 mm`,`<b>Ø${P.pr} po ${R.sr} mm</b>, ${F(R.Asrp,0)} mm²/m`);}
+ else s+=Nt("Rozdělovací výztuž je v zadání vypnutá.");
+ s+=E("Výztuž zavedená do podpory",`A<sub>sl</sub> ≥ max(0,25·A<sub>s</sub>; A<sub>s,min</sub>) = max(${F(0.25*o.As,0)}; ${F(o.Am,0)}) = ${F(R.supNeed,0)} mm²/m; ${R.half?`každý 2. prut: A<sub>s</sub>/2 = ${F(o.As/2,0)} mm²/m, s = 2·${o.s} = ${R.ssup} mm ≤ s<sub>max</sub>`:"každý 2. prut nevyhoví, do podpory jdou všechny pruty"}`,`Ø${o.ph} po ${R.ssup} mm`);
+ s+=E("Horní výztuž u podpor",`A ≥ ${F(R.supNeed,0)} mm²/m, rozteč ≤ ${F(R.smax,0)} mm, délka 0,2·l<sub>n</sub> = 0,2·${F(P.ln,3)} = ${F(R.ltop,3)} m od líce podpory`,`<b>Ø${R.top.ph} po ${R.top.s} mm</b>, ${F(R.top.A,0)} mm²/m`);
+ const c=R.checks;
+ s+=H(7,"Posouzení průřezu na ohybový moment");
+ s+=E("Neutrální osa z rovnováhy F<sub>c</sub> = F<sub>s</sub>",`0,8·x<sub>u</sub>·b·f<sub>cd</sub> = A<sub>s</sub>·f<sub>yd</sub> → x<sub>u</sub> = ${F(o.As,0)}·${F(R.fyd,1)}/(0,8·1000·${F(R.fcd,2)})`,`x<sub>u</sub> = ${F(R.xu,1)} mm`);
+ s+=E("Tlaková a tahová síla",`F<sub>c</sub> = F<sub>s</sub> = A<sub>s</sub>·f<sub>yd</sub> = ${F(o.As,0)}·${F(R.fyd,1)}·10⁻³`,`F = ${F(R.Fs,1)} kN`);
+ s+=E("Přetvoření výztuže – mez kluzu",`ε<sub>s</sub> = ε<sub>cu</sub>·(d − x<sub>u</sub>)/x<sub>u</sub> = 3,5·(${F(o.d,1)} − ${F(R.xu,1)})/${F(R.xu,1)} = ${F(R.es,1)} ‰ &gt; ε<sub>yd</sub> = ${F(R.eyd,2)} ‰`,`ε<sub>s</sub> = ${F(R.es,1)} ‰`,c.es);
+ s+=E("Rameno vnitřních sil",`z<sub>c</sub> = d − 0,8·x<sub>u</sub>/2 = ${F(o.d,1)} − 0,4·${F(R.xu,1)}`,`z<sub>c</sub> = ${F(R.zc,1)} mm`);
+ s+=E("Moment na mezi únosnosti",`M<sub>Rd</sub> = A<sub>s</sub>·f<sub>yd</sub>·z<sub>c</sub> = ${F(o.As,0)}·${F(R.fyd,1)}·${F(R.zc,1)}·10⁻⁶ ≥ M<sub>Ed</sub> = ${F(R.M,2)} kNm`,`M<sub>Rd</sub> = ${F(R.MRd,2)} kNm`,c.MRd);
+ s+=E("Využití průřezu",`M<sub>Ed</sub>/M<sub>Rd</sub> = ${F(R.M,2)}/${F(R.MRd,2)}`,`${F(R.M/R.MRd*100,0)} %`);
+ s+=E("Porušení při vzniku trhliny",`M<sub>cr</sub> = ${F(o.Mcr,2)} kNm ≤ M<sub>Rd</sub> = ${F(R.MRd,2)} kNm`,"",c.Mcr);
+ s+=E("Minimální vyztužení",`A<sub>s</sub> = ${F(o.As,0)} ≥ A<sub>s,min</sub> = ${F(o.Am,0)} mm²/m`,"",c.Asmin);
+ s+=E("Světlá mezera mezi pruty",`s<sub>u</sub> = s − Ø = ${o.s} − ${o.ph} = ${F(R.su,0)} mm ≥ max(Ø; D<sub>upper</sub> + 5; 20) = max(${o.ph}; ${F(P.Du+5,0)}; 20) = ${F(R.sum,0)} mm`,"",c.su);
+ s+=E("Maximální rozteč",`s = ${o.s} mm ≤ s<sub>max</sub> = min(3h; 400) = min(${F(3*R.h,0)}; 400) = ${F(R.smax,0)} mm`,"",c.smax);
+ if(P.rz)s+=E("Rozteč rozdělovací výztuže",`s<sub>r</sub> = ${R.sr} mm ≤ s<sub>max</sub> = ${F(R.smax,0)} mm`,"",c.sr);
+ s+=E("Výztuž u podpor",`dolní A<sub>sl</sub> = ${F(R.Asl,0)}, horní A = ${F(R.top.A,0)} ≥ ${F(R.supNeed,0)} mm²/m; rozteče ${R.ssup} a ${R.top.s} ≤ ${F(R.smax,0)} mm`,"",c.sup&&c.top);
+ s+=H(8,"Posouzení na posouvající sílu");
+ s+=E("Posouvající síla v řezu d od líce podpory",`V<sub>Ed1</sub> = V<sub>Ed</sub> − f<sub>d</sub>·(d + a<sub>1</sub>) = ${F(R.V,2)} − ${F(R.fd,2)}·(${m(o.d/1000)} + ${m(R.a1)})`,`V<sub>Ed1</sub> = ${F(R.VE1,2)} kN`);
+ s+=E("Smykové napětí",`τ<sub>Ed</sub> = V<sub>Ed1</sub>/(0,9·d·b) = ${F(R.VE1,2)}·10³/(0,9·${F(o.d,1)}·1000)`,`τ<sub>Ed</sub> = ${F(R.tE,3)} MPa`);
+ s+=E("Parametr drsnosti trhliny",`d<sub>dg</sub> = 16 + D<sub>lower</sub> = 16 + ${F(P.Dl,0)}, nejvýše 40 mm`,`d<sub>dg</sub> = ${F(R.ddg,0)} mm`);
+ s+=E("Minimální smyková únosnost",`τ<sub>Rdc,min</sub> = (11/γ<sub>V</sub>)·√(f<sub>ck</sub>/f<sub>yd</sub>·d<sub>dg</sub>/d) = (11/1,4)·√(${fck}/${F(R.fyd,1)}·${F(R.ddg,0)}/${F(o.d,1)})`,`τ<sub>Rdc,min</sub> = ${F(R.tmin,3)} MPa`);
+ if(R.tE<=R.tmin)s+=E("Podmínka spolehlivosti",`τ<sub>Ed</sub> = ${F(R.tE,3)} MPa ≤ τ<sub>Rdc,min</sub> = ${F(R.tmin,3)} MPa`,"podrobné ověření není nutné",true);
+ else{s+=E("Stupeň vyztužení výztuží u podpory",`ρ<sub>l</sub> = A<sub>sl</sub>/(b·d) = ${F(R.Asl,0)}/(1000·${F(o.d,1)})`,`ρ<sub>l</sub> = ${F(R.rho,5)}`);
+  s+=E("Smyková únosnost",`τ<sub>Rdc</sub> = (0,66/γ<sub>V</sub>)·(100·ρ<sub>l</sub>·f<sub>ck</sub>·d<sub>dg</sub>/d)<sup>1/3</sup> = (0,66/1,4)·(100·${F(R.rho,5)}·${fck}·${F(R.ddg,0)}/${F(o.d,1)})<sup>1/3</sup> = ${F(R.tRc,3)}, nejméně τ<sub>Rdc,min</sub>`,`τ<sub>Rdc</sub> = ${F(R.tR,3)} MPa`);
+  s+=E("Podmínka spolehlivosti",`τ<sub>Ed</sub> = ${F(R.tE,3)} MPa ≤ τ<sub>Rdc</sub> = ${F(R.tR,3)} MPa`,"",c.shear);}
+ s+=H(9,"Závěr");
+ const ok=allOk(R);
+ s+=`<div class="sum st-end">${ok?`<b class="ok">Deska vyhovuje.</b>`:`<b class="bad">Deska nevyhovuje</b> – viz posudky označené ✗.`} Deska tloušťky h = ${F(R.h,0)} mm z betonu ${cls}, hlavní výztuž Ø${o.ph} po ${o.s} mm (A<sub>s</sub> = ${F(o.As,0)} mm²/m)${P.rz?`, rozdělovací Ø${P.pr} po ${R.sr} mm`:""}, horní výztuž u podpor Ø${R.top.ph} po ${R.top.s} mm, krytí ${F(o.c,0)} mm. Využití v ohybu ${F(R.M/R.MRd*100,0)} %, ve smyku ${F(R.tE/R.tR*100,0)} %.</div>`;
+ s+=Nt(NOTE_END);
+ return s}
+
+/* ---------- vykreslení výsledků na stránce ---------- */
+function renderAll(R){const ok=okSec(R);
+ document.querySelectorAll(".rbody").forEach(e=>e.hidden=false);document.querySelectorAll("details.fold .empty").forEach(e=>e.hidden=true);
+ gPreview();
+ $("ov").innerHTML=ok?tilesHTML(R)+verdictHTML(R)+checksTable(R)+`<p class="note">${R.auto?"Tloušťka navržena jako nejmenší h od l<sub>n</sub>/25 po 10 mm, při které deska vyhoví. ":"Tloušťka zadána ručně. "}${R.h>R.hi?"Pozor: h je nad doporučeným rozsahem l/25 až l/20. ":""}${R.P.rz?"":"Rozdělovací výztuž je vypnutá; EC2 ji u jednosměrně pnutých desek vyžaduje. "}${NOTE_END}</p>`:BADSEC;
+ $("geoFig").innerHTML=geomFig(R);$("geoKV").innerHTML=geoKV(R);$("loadKV").innerHTML=loadKV(R);$("layFig").innerHTML=layersFig(R);
+ $("beamFig").innerHTML=beamFig(R);$("forceKV").innerHTML=forceKV(R);$("resistKV").innerHTML=resistKV(R);
+ CH_FOR=null;ensureCharts();
+ const secIds=["rbxFig","planFig","rbKV","candTab","secFig","bendKV","matKV","shFig","shKV"];
+ if(ok){$("rbxFig").innerHTML=rebarXFig(R);$("planFig").innerHTML=planFig(R);$("rbKV").innerHTML=rbKV(R);$("candTab").innerHTML=candTab(R);
+  $("secFig").innerHTML=sectionFig(R);$("bendKV").innerHTML=bendKV(R);$("matKV").innerHTML=matKV(R);$("shFig").innerHTML=shearFig(R);$("shKV").innerHTML=shKV(R)}
+ else{secIds.forEach(i=>$(i).innerHTML="");$("rbKV").innerHTML=BADSEC;$("bendKV").innerHTML=BADSEC;$("shKV").innerHTML=BADSEC}
+ renderStress(R);$("steps").innerHTML=stepsHTML(R);renderMeta(R)}
+function renderMeta(R){const P=R.P,o=R.o,ok=okSec(R),good=ok&&allOk(R);
+ $("meta_in").innerHTML=`l<sub>n</sub> = ${F(P.ln,2)} m · ${clsName(P.fck)} · q<sub>k</sub> = ${F(P.qk,2)} kN/m²`;
+ $("meta_res").innerHTML=ok?`h = <b>${F(R.h,0)} mm</b> · <b>Ø${o.ph} po ${o.s} mm</b> · <span class="${good?"ok":"bad"}">${good?"✓ vyhovuje":"✗ nevyhovuje"}</span>`:`<span class="bad">průřez nevyhoví</span>`;
+ $("meta_geo").innerHTML=`l<sub>eff</sub> = <b>${F(R.le,3)} m</b> · g<sub>k</sub> = ${F(R.gk,2)} · f<sub>d</sub> = <b>${F(R.fd,2)} kN/m²</b>`;
+ $("meta_vs").innerHTML=`M<sub>Ed</sub> = <b>${F(R.M,2)} kNm</b> · V<sub>Ed</sub> = <b>${F(R.V,2)} kN</b>`;
+ $("meta_rb").innerHTML=ok?`<b>Ø${o.ph} po ${o.s} mm</b> · A<sub>s</sub> = ${F(o.As,0)} mm²/m · d = ${F(o.d,0)} mm`:"";
+ $("meta_sec").innerHTML=ok?`M<sub>Rd</sub> = <b>${F(R.MRd,2)} kNm</b> ≥ M<sub>Ed</sub> · využití ${F(R.M/R.MRd*100,0)} %`:"";
+ $("meta_sh").innerHTML=ok?`τ<sub>Ed</sub> = <b>${F(R.tE,3)} MPa</b> ≤ τ<sub>Rd</sub> = ${F(R.tR,3)} MPa`:"";
+ $("meta_st").innerHTML=ok?"stav I, II a MSÚ":"";
+ $("meta_steps").innerHTML="9 kroků se vzorci";}
+
+/* ---------- rolety ---------- */
+const FOLDS=[...document.querySelectorAll("details.fold")];
+$("openAll").addEventListener("click",()=>FOLDS.forEach(d=>d.open=true));
+$("closeAll").addEventListener("click",()=>FOLDS.forEach(d=>d.open=false));
+$("f_vs").addEventListener("toggle",ensureCharts);
+
+/* ---------- výpočet ---------- */
+function run(){const{errs,bad,P}=readForm();
+ document.querySelectorAll("#inputs [aria-invalid]").forEach(e=>e.removeAttribute("aria-invalid"));
+ if(errs.length){bad.forEach(id=>{const e=$(id);if(e)e.setAttribute("aria-invalid","true")});$("valMsg").innerHTML="Doplňte nebo opravte: "+errs.join(", ")+".";$("valMsg").hidden=false;const f=$(bad[0]);if(f)f.focus();return}
+ $("valMsg").hidden=true;
+ const R=SD.compute(P);CUR=R;HAS=true;STALE=false;document.body.classList.remove("stale");$("staleMsg").hidden=true;
+ renderAll(R);updPrint();
+ $("f_res").open=true;
+ const rm=matchMedia("(prefers-reduced-motion: reduce)").matches;$("f_res").closest("section").scrollIntoView({behavior:rm?"auto":"smooth",block:"start"})}
+$("run").addEventListener("click",run);
+try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{CH_FOR=null;ensureCharts()})}catch(e){}
+new MutationObserver(()=>{CH_FOR=null;ensureCharts()}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+/* ---------- tisk: protokol do PDF (bez knihoven) ---------- */
+function updPrint(){const can=HAS&&!STALE;$("printBtn").disabled=!can;
+ $("printInfo").textContent=can?"Vytvoří PDF se zadáním, výsledky, nákresy a průběhy vnitřních sil.":HAS?"Zadání se změnilo. Nejdřív přepočítejte, aby PDF odpovídalo zadání.":"Vytvoří PDF se zadáním, výsledky, nákresy a průběhy vnitřních sil. Nejdřív spusťte výpočet."}
+function setPM(t,cls=""){const m=$("printMsg");m.textContent=t;m.className="status "+cls;m.hidden=!t}
+function buildReport(R,withSteps){PFX="rp";const host=$("rep");host.innerHTML="";const B=[],ok=okSec(R),P=R.P,o=R.o;
+ const add=(html,cls="")=>{const d=document.createElement("div");d.className="rb "+cls;d.innerHTML=html;host.appendChild(d);B.push(d);return d};
+ const fig=s=>`<div class="figwrap">${s}</div>`,hd=t=>add(`<h2 class="rp-h">${t}</h2>`,"rb-h");
+ try{
+ const date=new Date().toLocaleDateString("cs-CZ",{day:"numeric",month:"numeric",year:"numeric"});
+ const good=ok&&allOk(R);
+ const sum=ok?`<span class="${good?"ok":"bad"}">${good?"✓ Deska vyhovuje":"✗ Deska nevyhovuje"}</span> · h = ${F(R.h,0)} mm · ${clsName(P.fck)} · hlavní Ø${o.ph} po ${o.s} mm (${F(o.As,0)} mm²/m)${P.rz?` · rozdělovací Ø${P.pr} po ${R.sr} mm`:""} · horní u podpor Ø${R.top.ph} po ${R.top.s} mm · ${utilTxt(R)}`:`<span class="bad">✗ Průřez nevyhoví ani s nejmenší výztuží – zvětšete h nebo třídu betonu</span>`;
+ add(`<div class="rp-top"><div><div class="rp-t">Prostě uložená deska – statický výpočet</div><div class="rp-s">Jednosměrně nesená ŽB deska, pruh b = 1 m · EN 1990, ČSN EN 1991-1-1, EN 1992-1-1 (2. generace)</div></div><div class="rp-d">${date}</div></div><div class="rp-sum">${sum}</div>`);
+ hd("1  Zadání, zatížení a vnitřní síly");
+ const lay=`<table class="kv lt"><thead><tr><th>Skladba stropu</th><th>h</th><th>γ</th><th>g</th></tr></thead><tbody>${P.rows.map(r=>{const h=r.slab?R.h:r.h;return `<tr${r.slab?' class="em"':""}><td>${esc(r.n)}</td><td>${Fn(h)}</td><td>${F(r.r,1)}</td><td>${F(h/1000*r.r,3)}</td></tr>`}).join("")}</tbody><tfoot><tr><td colspan="3">g<sub>k</sub> [kN/m²]</td><td>${F(R.gk,3)}</td></tr></tfoot></table>`;
+ const geo=`<h3>Geometrie a zatížení</h3>`+kv([rw("l<sub>n</sub> ; t<sub>1</sub> ; t<sub>2</sub>",`${F(P.ln,3)} m ; ${Fi(P.t1*1000)} ; ${Fi(P.t2*1000)} mm`),rw(`a<sub>1</sub> ; a<sub>2</sub> (${P.lm==="ec2"?"min(h/2; t/2)":"t/2"})`,`${Fi(R.a1*1000)} ; ${Fi(R.a2*1000)} mm`),rw("l<sub>eff</sub>",F(R.le,3)+" m",1),rw("h"+(R.auto?" (navržena, l/25–l/20 = "+R.lo+"–"+R.hi+")":" (zadána)"),F(R.h,0)+" mm",1),rw("g<sub>k</sub> ; q<sub>k</sub>",`${F(R.gk,2)} ; ${F(P.qk,2)} kN/m²`),rw("f<sub>d</sub> = 1,35g<sub>k</sub> + 1,5q<sub>k</sub>",F(R.fd,2)+" kN/m²",1),rw("f<sub>k</sub> = g<sub>k</sub> + q<sub>k</sub>",F(R.fk,2)+" kN/m²")]);
+ const frc=`<h3>Vnitřní síly a únosnost</h3>`+kv([rw("M<sub>Ed</sub> (x = l<sub>eff</sub>/2)",F(R.M,2)+" kNm/m",1),rw("V<sub>Ed</sub> = R<sub>A</sub> = R<sub>B</sub>",F(R.V,2)+" kN/m",1),...(ok?[rw("V<sub>Ed1</sub> (řez d od líce)",F(R.VE1,2)+" kN/m"),rw("M<sub>Rd</sub>",F(R.MRd,2)+" kNm/m",1),rw("M<sub>cr</sub>",F(o.Mcr,2)+" kNm/m"),rw("V<sub>Rd</sub> = τ<sub>Rd</sub>·0,9d·b",F(R.VRd,2)+" kN/m")]:[]),rw("M<sub>Ek</sub> (g<sub>k</sub> + q<sub>k</sub>)",F(R.Mk,2)+" kNm/m")]);
+ add(`<div class="grid3"><div>${geo}</div><div>${lay}</div><div>${frc}</div></div>`);
+ add(fig(geomFig(R)));add(fig(mvFig(R)));
+ if(ok){hd("2  Výztuž a posudky");
+  add(`<div class="figs2">${fig(rebarXFig(R))}${fig(planFig(R))}</div>`);
+  const rb=`<h3>Výztuž (B500, f<sub>yk</sub> = ${F(P.fyk,0)} MPa)</h3>`+kv([rw("c<sub>nom</sub> ; d",`${F(o.c,0)} ; ${F(o.d,1)} mm`),rw("A<sub>s,req</sub> ; A<sub>s,min</sub>",`${F(o.Ar,0)} ; ${F(o.Am,0)} mm²/m`),rw("Hlavní dolní",`Ø${o.ph} po ${o.s} mm = ${F(o.As,0)} mm²/m`,1),rw("Rozdělovací",P.rz?`Ø${P.pr} po ${R.sr} mm = ${F(R.Asrp,0)} mm²/m`:"vypnuta"),rw("Do podpory"+(R.half?" (každý 2. prut)":""),`Ø${o.ph} po ${R.ssup} mm = ${F(R.Asl,0)} mm²/m`),rw("Horní u podpor, délka "+Fi(R.ltop*1000)+" mm od líce",`Ø${R.top.ph} po ${R.top.s} mm = ${F(R.top.A,0)} mm²/m`,1)]);
+  const mt=`<h3>Materiály a průřez</h3>`+kv([rw(`${clsName(P.fck)}: f<sub>cd</sub> ; f<sub>ctm</sub>`,`${F(R.fcd,2)} ; ${F(R.fctm,1)} MPa`),rw("f<sub>yd</sub> ; ε<sub>yd</sub> ; ε<sub>cu</sub>",`${F(R.fyd,1)} MPa ; ${F(R.eyd,2)} ; 3,5 ‰`),rw("x<sub>u</sub> ; z<sub>c</sub>",`${F(R.xu,1)} ; ${F(R.zc,1)} mm`),rw("F<sub>c</sub> = F<sub>s</sub>",F(R.Fs,1)+" kN/m"),rw("τ<sub>Ed</sub> ; τ<sub>Rdc,min</sub>",`${F(R.tE,3)} ; ${F(R.tmin,3)} MPa`),rw("k<sub>tc</sub> ; D<sub>upper</sub> ; D<sub>lower</sub> ; c<sub>min,dur</sub>",`${F(P.ktc,2)} ; ${Fn(P.Du)} ; ${Fn(P.Dl)} ; ${Fn(P.cd)} mm`)]);
+  add(`<div class="grid2"><div>${rb}</div><div>${mt}</div></div>`);
+  add(checksTable(R));add(fig(sectionFig(R)))}
+ add(`<p class="disc">${NOTE_END} ${DISC}</p>`);
+ if(withSteps){hd((ok?"3":"2")+"  Podrobný výpočet po krocích");const tmp=document.createElement("div");tmp.innerHTML=stepsHTML(R);
+  [...tmp.children].forEach(ch=>{const d=document.createElement("div");d.className="rb rs"+(ch.classList.contains("st-h")?" rb-h":"");d.appendChild(ch);host.appendChild(d);B.push(d)})}
+ }finally{PFX="pg"}
+ return B}
+const SC=2,PW=794,PH=1123,MX=45,MT=40,MB=34,CW=704,AH=PH-MT-MB-26,GAP=7;
+async function shoot(el,css){const w=CW,h=Math.ceil(el.getBoundingClientRect().height*1.35)+40;
+ const wrap=document.createElement("div");wrap.className="rep";wrap.setAttribute("style",`width:${w}px;background:#ffffff`);
+ const stl=document.createElement("style");stl.textContent=css;wrap.appendChild(stl);wrap.appendChild(el.cloneNode(true));
+ const xml=new XMLSerializer().serializeToString(wrap);
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><foreignObject x="0" y="0" width="${w}" height="${h}">${xml}</foreignObject></svg>`;
+ const img=new Image();img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);await img.decode();
+ const c=document.createElement("canvas");c.width=w*SC;c.height=h*SC;const g=c.getContext("2d");g.fillStyle="#ffffff";g.fillRect(0,0,c.width,c.height);g.drawImage(img,0,0,c.width,c.height);return trimC(c)}
+/* ořízne prázdné (bílé) řádky pod obsahem bloku */
+function trimC(c){const g=c.getContext("2d"),W=c.width,H=c.height,d=g.getImageData(0,0,W,H).data;let y=H-1;
+ for(;y>0;y--){let ink=false;const o=y*W*4;for(let x=0;x<W*4;x+=8){if(d[o+x]<245||d[o+x+1]<245||d[o+x+2]<245){ink=true;break}}if(ink)break}
+ const nh=Math.min(H,y+1+2*SC);if(nh>=H)return c;const t=document.createElement("canvas");t.width=W;t.height=nh;t.getContext("2d").drawImage(c,0,0);return t}
+function pdfText(s){let h="FEFF";for(const ch of s){const c=ch.charCodeAt(0);h+=c.toString(16).padStart(4,"0").toUpperCase()}return `<${h}>`}
+function makePdf(pages,title){const enc=new TextEncoder(),parts=[];let len=0;const offs=[];
+ const push=x=>{const b=typeof x==="string"?enc.encode(x):x;parts.push(b);len+=b.length};
+ const obj=(id,fn)=>{offs[id]=len;push(`${id} 0 obj\n`);fn();push("\nendobj\n")};
+ push("%PDF-1.4\n");push(new Uint8Array([37,226,227,207,211,10]));
+ const n=pages.length,info=3+3*n;
+ obj(1,()=>push("<< /Type /Catalog /Pages 2 0 R >>"));
+ obj(2,()=>push(`<< /Type /Pages /Kids [${pages.map((_,i)=>`${3+3*i} 0 R`).join(" ")}] /Count ${n} >>`));
+ pages.forEach((p,i)=>{const pid=3+3*i,cid=pid+1,iid=pid+2,cs=`q 595.28 0 0 841.89 0 0 cm /Im${i} Do Q`;
+  obj(pid,()=>push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im${i} ${iid} 0 R >> >> /Contents ${cid} 0 R >>`));
+  obj(cid,()=>push(`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`));
+  obj(iid,()=>{push(`<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.jpeg.length} >>\nstream\n`);push(p.jpeg);push("\nendstream")})});
+ obj(info,()=>push(`<< /Title ${pdfText(title)} /Producer (Prosta ulozena deska) >>`));
+ const xref=len,total=info+1;let x=`xref\n0 ${total}\n0000000000 65535 f \n`;for(let i=1;i<total;i++)x+=String(offs[i]).padStart(10,"0")+" 00000 n \n";
+ push(x);push(`trailer\n<< /Size ${total} /Root 1 0 R /Info ${info} 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+ return new Blob(parts,{type:"application/pdf"})}
+let DLP=null;
+function dlns(){if(!DLP)DLP=(window.claude&&typeof window.claude.use==="function")?Promise.resolve(window.claude.use("downloads")).catch(()=>null):Promise.resolve(undefined);return DLP}
+dlns();
+async function saveFile(blob,name){const d=await dlns();
+ if(d){await d.save({filename:name,data:blob});return}
+ if(d===null)throw{code:"unavailable"};
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000)}
+const tick2=()=>new Promise(r=>requestAnimationFrame(()=>r()));
+async function printPdf(){if(!CUR||STALE)return;const R=CUR,btn=$("printBtn");btn.disabled=true;setPM("Připravuji PDF…");
+ try{const blocks=buildReport(R,$("pr_steps").checked);
+  try{await document.fonts.ready}catch(e){}await tick2();
+  const css=$("css").textContent,shots=[];
+  for(let i=0;i<blocks.length;i++){setPM(`Připravuji PDF… ${Math.round((i+1)/blocks.length*100)} %`);shots.push({c:await shoot(blocks[i],css),keep:blocks[i].classList.contains("rb-h"),rs:blocks[i].classList.contains("rs")})}
+  const pages=[[]];let y=0;const np=()=>{pages.push([]);y=0};
+  for(let i=0;i<shots.length;i++){const sh=shots[i],hb=sh.c.height/SC;
+   if(sh.keep&&i+1<shots.length&&y>0&&y+hb+Math.min(shots[i+1].c.height/SC,AH*0.4)>AH)np();
+   if(hb>AH){let off=0;while(off<hb-0.5){if(y>0)np();const part=Math.min(AH,hb-off);pages[pages.length-1].push({c:sh.c,sy:off,h:part,y});y+=part;off+=part}continue}
+   if(y>0&&y+hb>AH)np();
+   pages[pages.length-1].push({c:sh.c,sy:0,h:hb,y});y+=hb+(sh.rs?2:GAP)}
+  const out=[],n=pages.length,title="Prostě uložená deska – statický výpočet";
+  for(let pi=0;pi<n;pi++){setPM(`Skládám strany PDF… ${pi+1}/${n}`);const pc=document.createElement("canvas");pc.width=PW*SC;pc.height=PH*SC;const g=pc.getContext("2d");
+   g.fillStyle="#ffffff";g.fillRect(0,0,pc.width,pc.height);
+   pages[pi].forEach(it=>g.drawImage(it.c,0,Math.round(it.sy*SC),it.c.width,Math.round(it.h*SC),MX*SC,Math.round((MT+it.y)*SC),CW*SC,Math.round(it.h*SC)));
+   g.strokeStyle="#c4ccd1";g.lineWidth=SC;g.beginPath();g.moveTo(MX*SC,(PH-MB-14)*SC);g.lineTo((PW-MX)*SC,(PH-MB-14)*SC);g.stroke();
+   g.fillStyle="#56636b";g.font=`${9*SC}px Arial,"Helvetica Neue",Helvetica,"Liberation Sans",sans-serif`;g.textBaseline="alphabetic";
+   g.textAlign="left";g.fillText("Informativní pomocný výpočet, nenahrazuje statický výpočet autorizované osoby. Bez záruky.",MX*SC,(PH-MB)*SC);g.textAlign="right";g.fillText(`strana ${pi+1} / ${n}`,(PW-MX)*SC,(PH-MB)*SC);
+   const blob=await new Promise(r=>pc.toBlob(r,"image/jpeg",0.9));out.push({w:pc.width,h:pc.height,jpeg:new Uint8Array(await blob.arrayBuffer())})}
+  const pdf=makePdf(out,title),name=`deska-h${R.h}-${clsName(R.P.fck).replace("/","-")}.pdf`;
+  setPM("PDF je připravené, potvrďte uložení.");
+  await saveFile(pdf,name);
+  setPM(`Uloženo: ${name} (${n} ${n===1?"strana":n<5?"strany":"stran"}).`,"ok")}
+ catch(e){const c=e&&e.code;
+  setPM(c==="declined"?"Uložení PDF bylo zrušeno.":c==="rate_limited"?"Jedno uložení už čeká na potvrzení. Chvíli počkejte a zkuste to znovu.":(c==="unavailable"||c==="not_granted"||c==="capability_disabled"||c==="capability_removed"||c==="extension_not_enabled")?"Stažení souboru tady není dostupné. Otevřete stránku v samostatném okně prohlížeče a zkuste to znovu.":"PDF se nepodařilo vytvořit: "+((e&&e.message)||e),c==="declined"?"":"bad");console.error(e)}
+ finally{$("rep").innerHTML="";updPrint()}}
+$("printBtn").addEventListener("click",printPdf);
+gPreview();updPrint();
+</script>
+
+</body>
+</html>
